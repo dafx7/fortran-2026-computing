@@ -63,7 +63,7 @@ Perpindahan ronde 1 ke ronde 2 hanya 15 menit (lantai 3 ke lantai 2). Laptop pre
 - **Layar:** Slide 2 (titik data jarak dan waktu, tanda tanya di 7 km).
 - **Fasilitator lantai:** Ikut mengangkat tangan untuk memancing partisipasi.
 - **Timekeeper:** Kode 2 jari pada menit 2:30 jika lead masih bercerita.
-- **Jika waktu mepet, potong ini:** Lewati angkat tangan. Langsung sebutkan "jawabannya sekitar 22 menit, dan hari ini kita lihat bagaimana komputer menemukannya."
+- **Jika waktu mepet, potong ini:** Lewati angkat tangan. Langsung sebutkan "jawabannya sekitar 23 menit, dan hari ini kita lihat bagaimana komputer menemukannya."
 
 ### Menit 3-4: Alur 90 menit dan aturan
 - **Lead berkata:**
