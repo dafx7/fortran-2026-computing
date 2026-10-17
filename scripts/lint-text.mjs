@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const dirs = ['site', 'materi'];
-const exts = new Set(['.html', '.md', '.js', '.css', '.webmanifest', '.json', '.txt', '.svg']);
+const exts = new Set(['.csv', '.html', '.md', '.js', '.css', '.webmanifest', '.json', '.txt', '.svg']);
 const rules = [
   { name: 'em dash', re: /—/ },
   { name: 'en dash', re: /–/ },
