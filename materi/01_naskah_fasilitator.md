@@ -47,7 +47,7 @@ Perpindahan ronde 1 ke ronde 2 hanya 15 menit (lantai 3 ke lantai 2). Laptop pre
 ### Menit 0-1: Salam dan perkenalan tim
 - **Lead berkata:**
   - "Assalamualaikum, selamat pagi/siang semuanya. Salam sejahtera untuk kita semua."
-  - "Kami dari Computing Laboratory, Fakultas Informatika. Saya [KONFIRMASI: nama lead], bersama [KONFIRMASI: nama fasilitator lantai] dan [KONFIRMASI: nama timekeeper]."
+  - "Kami dari Computing Laboratory, Fakultas Informatika. Saya (nama lead), bersama (nama fasilitator lantai) dan (nama timekeeper)." Setiap tim menyebut namanya sendiri.
   - "Selamat datang di kelas [nama kelas, misalnya Lamorak]. Hari ini kita di The Forge of Excalibur, tempat para calon ksatria ditempa."
 - **Layar:** Slide 1 (judul "Dua Cara Belajar").
 - **Fasilitator lantai:** Berdiri di belakang kelas, melihat apakah semua peserta bisa membaca layar.
@@ -366,7 +366,7 @@ Kelompok yang tampil di Blok 5 menceritakan generasi mereka di papan tulis.
 - Pertanyaan tentang pendaftaran atau rekrutmen lab: arahkan ke kanal resmi, tanpa menjanjikan apa pun.
 - Pertanyaan teknis tentang acara (jadwal, penilaian, kelas): arahkan ke panitia.
 
-## Hal yang harus dikonfirmasi sebelum sesi
+## Status konfirmasi
 
-- [KONFIRMASI: nama lead, fasilitator lantai, dan timekeeper untuk Tim A dan Tim B]
-- [KONFIRMASI: ketersediaan proyektor, HDMI, dan papan tulis di keenam ruangan]
+- Proyektor, HDMI, dan papan tulis tersedia di keenam ruangan (sudah dipastikan). Adaptor HDMI dan USB-C tetap dibawa.
+- Semua fakta lab di naskah ini sudah dipastikan dari deck Open Mind Computing Lab 2026.

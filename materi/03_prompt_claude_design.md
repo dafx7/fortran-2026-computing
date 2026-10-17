@@ -2,7 +2,7 @@
 
 Salin seluruh blok di bawah garis ke Claude Design. Lampirkan juga gambar dari `materi/screenshots/` dan `materi/qr.png` yang disebut di tiap slide.
 
-Sebelum dipakai di kelas, ganti semua `[KONFIRMASI: ...]` dengan informasi yang sudah dipastikan, atau hapus barisnya.
+Semua informasi di prompt ini sudah dipastikan. Nama presenter tidak ditampilkan di slide.
 
 ---
 
@@ -10,7 +10,7 @@ Buatkan slide deck presentasi 16:9 berisi **16 slide** (tidak lebih) untuk sesi 
 
 **Gaya visual**
 - Warna utama navy `#0A2540`, aksen emas `#F7B125`, latar putih atau navy. Teks utama putih di atas navy, navy di atas putih.
-- Aksen Camelot dan "Forge of Excalibur" yang halus: garis tipis berbentuk pedang atau percikan api tempaan di sudut, ornamen perisai sederhana, pola batu kastel yang samar. Jangan meniru atau memakai logo apa pun (logo FORTRAN, HIMAIF, Telkom University, atau logo lab). Sisakan area kosong kecil di pojok kanan atas untuk logo resmi yang akan ditempel panitia `[KONFIRMASI: logo yang boleh dipakai]`.
+- Aksen Camelot dan "Forge of Excalibur" yang halus: garis tipis berbentuk pedang atau percikan api tempaan di sudut, ornamen perisai sederhana, pola batu kastel yang samar. Jangan meniru atau membuat ulang logo FORTRAN, HIMAIF, atau Telkom University. Logo lab (`computing-logo.png`) boleh dipakai, lihat `09_prompt_claude_design_revisi.md`.
 - Font sans-serif yang bersih dan mudah dibaca dari belakang kelas. Ukuran teks isi minimal 24 pt, judul minimal 36 pt. Maksimal 6 baris teks per slide.
 - Bahasa Indonesia yang ramah dan cukup formal. Jangan memakai tanda em dash atau en dash. Hindari pola kalimat yang menyangkal satu hal lalu menggantinya dengan hal lain dalam satu kalimat.
 - Tidak ada konten tentang AI Agent, LLM, atau chatbot selain menyebut judul publikasi lab di slide 6 apa adanya.
@@ -24,7 +24,7 @@ Buatkan slide deck presentasi 16:9 berisi **16 slide** (tidak lebih) untuk sesi 
 - Baris bawah: Computing Laboratory · FORTRAN 2026 · The Forge of Excalibur
 - Baris kecil: Stand as One. Rise as Knights.
 - Gambar: tidak ada. Ilustrasi pedang tipis berwarna emas yang membentuk garis lurus naik di antara titik-titik putih (metafora garis prediksi).
-- Catatan pembicara: Salam pembuka, perkenalan tiga anggota tim [KONFIRMASI: nama lead, fasilitator lantai, timekeeper], sebut nama kelas (nama ksatria).
+- Catatan pembicara: Salam pembuka, perkenalan tiga anggota tim (disebut lisan, tidak ditulis di slide), sebut nama kelas (nama ksatria).
 
 ### Slide 2. Bagaimana mesin belajar? (menit 1 sampai 3)
 - Judul: **Kalau 7 km, berapa menit?**

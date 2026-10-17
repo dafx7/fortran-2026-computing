@@ -6,9 +6,9 @@ Dikerjakan bersama oleh keenam anggota (Tim A dan Tim B). Centang di laptop deng
 
 | Peran | Tim A (Computing A) | Tim B (Computing B) |
 |---|---|---|
-| Lead presenter (sama sepanjang hari) | [KONFIRMASI: nama] | [KONFIRMASI: nama] |
-| Fasilitator lantai | [KONFIRMASI: nama] | [KONFIRMASI: nama] |
-| Timekeeper dan pencatat | [KONFIRMASI: nama] | [KONFIRMASI: nama] |
+| Lead presenter (sama sepanjang hari) | (isi saat dry run) | (isi saat dry run) |
+| Fasilitator lantai | (isi saat dry run) | (isi saat dry run) |
+| Timekeeper dan pencatat | (isi saat dry run) | (isi saat dry run) |
 
 - [ ] Setiap orang tahu ruangan dan jam timnya (Tim A: KU1.03.07, KU1.02.15, KU1.03.12. Tim B: KU1.03.06, KU1.02.16, KU1.03.13).
 - [ ] Kode waktu timekeeper ke lead disepakati (2 jari, kepalan, telapak ke bawah).
@@ -64,6 +64,6 @@ Lead membawakan dengan stopwatch, yang lain menyimak:
 
 ## 8. Penutup (menit 19 sampai 20)
 
-- [ ] Semua `[KONFIRMASI: ...]` di naskah dan slide sudah diganti atau dihapus.
+- [ ] Slide final sudah memuat publikasi, foto, dan QR alat yang benar.
 - [ ] Tautan alat dan tautan pendek sudah dikirim ke panitia untuk dibagikan sebelum sesi.
-- [ ] Jadwal berkumpul besok pagi disepakati `[KONFIRMASI: jam dan tempat berkumpul]`. Ronde 1 dimulai 08:20.
+- [ ] Jadwal berkumpul besok pagi disepakati bersama. Ronde 1 dimulai 08:20.

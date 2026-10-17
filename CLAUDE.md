@@ -52,7 +52,7 @@ Room changes: 15 minutes between round 1 and 2 (floor 3 to floor 2). ISHOMA 11:3
 - **Network:** assume classroom Wi-Fi is unreliable. Everything runs in the browser; no server, no backend.
 - **No printing by the lab.** Handout is digital, inside the tool.
 - **Team split:** Team A (3 people) runs Computing A all day, Team B (3 people) runs Computing B. Per team: 1 lead presenter (same person all day), 1 floor facilitator, 1 timekeeper and recorder.
-- **Class size assumption:** 30 to 40 participants, 6 to 8 groups. Room has projector, HDMI, whiteboard (unconfirmed; plan fallbacks). We bring HDMI and USB-C adapters.
+- **Class size assumption:** 30 to 40 participants, 6 to 8 groups. Every room has a projector, HDMI, and a whiteboard (confirmed); keep the fallbacks anyway. We bring HDMI and USB-C adapters.
 - **Hosting:** free static host. Default Netlify Drop; GitHub Pages as alternative. No analytics, no forms, no cookies, no accounts.
 - **Distribution:** committee shares the link before the session; QR code on slides; short link on the whiteboard; USB copy as fallback.
 - **Participant background:** finished first-year programming (pseudocode in theory, GoLang in practicum). Do not assume Python, statistics, calculus, or any ML. Nobody writes code during the session.
@@ -71,7 +71,7 @@ Room changes: 15 minutes between round 1 and 2 (floor 3 to floor 2). ISHOMA 11:3
 - The participant site's Tentang Lab tab still lists the earlier topic set; the owner decided not to update the site.
 - Official channels: Instagram https://www.instagram.com/computing.lab/ (@computing.lab) and website https://computinglab.tech
 - Recruitment is closed this year. Never promise or mention registration or open recruitment.
-- Unknown, must be marked `[KONFIRMASI: ...]` instead of invented: which members present in which room (Team A and Team B rosters), any numbers or awards not listed above.
+- Presenter names are not shown on slides or in the materials; presenters introduce themselves verbally. Any numbers or awards not listed above must be marked `[KONFIRMASI: ...]` instead of invented.
 
 ## 4. Writing rules
 

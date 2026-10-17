@@ -21,7 +21,7 @@ Jika nama file di proyek Open Mind berbeda dari isi foto di tabel, cocokkan deng
 **Jangan diunggah atau dipakai:**
 - `qr-pendaftaran.jpg` dan semua slide "Bergabung Bersama Kami", "Timeline Open Recruitment", "Syarat & Cara Daftar". Rekrutmen sudah ditutup, dan sesi FORTRAN tidak boleh menyebut pendaftaran.
 - `qr-presensi.jpg`: QR presensi milik acara Open Mind.
-- Foto wajah pengurus per orang, kecuali tiga presenter ruangan di slide 1 dan ketiganya sudah setuju.
+- Foto wajah pengurus per orang. Nama dan foto presenter tidak ditampilkan di slide.
 
 ---
 
@@ -76,9 +76,8 @@ Ganti seluruh isi slide 6. Tata letak meniru slide yang sama di deck Open Mind: 
 - Pakai `1_foto_bersama_peserta_panitia.jpg` sebagai latar penuh dengan lapisan navy 80% supaya teks tetap terbaca.
 - Teks, kotak kanal resmi (Instagram @computing.lab · computinglab.tech), dan penutup "Stand as One. Rise as Knights." tetap sama.
 
-### 6. Slide 1 (opsional)
-- Logo `computing-logo.png` di samping judul.
-- Jika diminta, tiga foto kecil berbingkai lingkaran untuk presenter ruangan, dengan nama di bawahnya. Biarkan kosong jika foto dan nama belum diberikan.
+### 6. Slide 1
+- Logo `computing-logo.png` di samping judul. Tidak ada nama atau foto presenter.
 
 ### Hal yang tidak boleh berubah
 - Slide 7 dan 13 tetap memakai QR alat `qr.png` (menuju `prediktor-computinglab.netlify.app`), bukan QR lain.
