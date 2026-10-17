@@ -23,7 +23,7 @@ Dikerjakan bersama oleh keenam anggota (Tim A dan Tim B). Centang di laptop deng
 
 ## 2. Alat di HP (menit 6 sampai 8)
 
-- [ ] Pindai QR di slide dengan HP. **QR membuka URL alat yang benar** (bukan placeholder computinglab.tech).
+- [ ] Pindai QR di slide dengan HP. **QR membuka https://prediktor-computinglab.netlify.app/**.
 - [ ] Di HP (Android dan iPhone jika ada): Misi 1 bisa dijalankan, tabel bisa diisi, prediksi tampil.
 - [ ] Tidak ada geser horizontal di halaman.
 

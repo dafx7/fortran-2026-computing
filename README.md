@@ -75,10 +75,10 @@ Workflow sudah tersedia di `.github/workflows/pages.yml`.
 
 ## Memperbarui QR setelah deploy
 
-QR saat ini masih placeholder yang menuju `https://computinglab.tech`. Setelah alamat alat final diketahui:
+Alat sudah aktif di **https://prediktor-computinglab.netlify.app/** (versi Inggris: `https://prediktor-computinglab.netlify.app/?lang=en`), dan QR sudah menuju alamat itu. Jika alamat berubah:
 
 ```bash
-node scripts/make-qr.mjs https://prediktor-computinglab.netlify.app
+node scripts/make-qr.mjs https://alamat-baru.netlify.app/
 ```
 
 Perintah ini menulis ulang `site/qr.svg` (tampil di tab Panduan) dan `materi/qr.png` (untuk slide). Setelah itu:

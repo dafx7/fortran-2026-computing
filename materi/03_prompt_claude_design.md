@@ -65,7 +65,7 @@ Buatkan slide deck presentasi 16:9 berisi **16 slide** (tidak lebih) untuk sesi 
 ### Slide 7. Bentuk kelompok (menit 15 sampai 18)
 - Judul: **Bentuk kelompok, maksimal 5 orang**
 - Isi: 1. Ikuti hitungan kakak fasilitator berdasarkan tempat duduk. 2. Minimal satu laptop per kelompok. 3. Buka alat lewat QR atau tautan di papan tulis.
-- Gambar: `materi/qr.png` berukuran besar di kanan, dengan tautan pendek di bawahnya [KONFIRMASI: tautan pendek setelah deploy].
+- Gambar: `materi/qr.png` berukuran besar di kanan, dengan tautan di bawahnya: prediktor-computinglab.netlify.app
 - Catatan pembicara: Jumlah kelompok = jumlah peserta dibagi 5, dibulatkan ke atas. Teman yang hanya membawa HP bergabung ke laptop teman sekelompok.
 
 ### Slide 8. Belajar = mencari error terkecil (menit 18 sampai 21)
@@ -102,7 +102,7 @@ Buatkan slide deck presentasi 16:9 berisi **16 slide** (tidak lebih) untuk sesi 
 ### Slide 13. Mini project: Prediktor (menit 37 sampai 70, tetap tampil selama praktik)
 - Judul: **Mini project: Prediktor**
 - Kiri: **Misi 1 (8')** Skenario jarak · GD dengan 3 learning rate · Jalankan GA. **Misi 2 (13')** Pilih atau buat skenario · 6 sampai 10 data fiktif · GD dan GA 5 kali · Prediksi 2 sampai 3 nilai · Isi Kartu Hasil.
-- Kanan: `materi/qr.png` besar dan tautan pendek [KONFIRMASI: tautan pendek setelah deploy].
+- Kanan: `materi/qr.png` besar dan tautan: prediktor-computinglab.netlify.app
 - Baris bawah: Data fiktif dan netral, tanpa data pribadi. Macet? Klik "Pakai preset".
 - Gambar kecil: `materi/screenshots/12_tampilan_hp.png`.
 - Catatan pembicara: Fasilitator berkeliling. Timekeeper mengumumkan pergantian misi di menit 50 dan 63.

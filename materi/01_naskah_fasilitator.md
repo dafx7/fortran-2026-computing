@@ -35,7 +35,7 @@ Perpindahan ronde 1 ke ronde 2 hanya 15 menit (lantai 3 ke lantai 2). Laptop pre
 
 - Laptop presenter: alat sudah terbuka di browser (tab **Praktik**, skenario "Jarak dan waktu tempuh"), slide terbuka di slide 1, mode layar penuh siap.
 - Uji HDMI ke proyektor. Bawa adaptor HDMI dan USB-C.
-- Tulis di papan tulis: tautan pendek alat `[KONFIRMASI: tautan pendek setelah deploy]` dan "Ruang Computing A/B, Ronde 1/2/3".
+- Tulis di papan tulis: tautan alat `prediktor-computinglab.netlify.app` dan "Ruang Computing A/B, Ronde 1/2/3".
 - Flashdisk berisi folder `site/` di saku fasilitator lantai.
 - Timekeeper membuka lembar catatan dan menulis ruang, ronde, dan nama kelas (nama ksatria).
 - Spidol papan tulis minimal 2 warna untuk refleksi dan kegiatan cadangan.
@@ -369,5 +369,4 @@ Kelompok yang tampil di Blok 5 menceritakan generasi mereka di papan tulis.
 - [KONFIRMASI: peran spesifik lab di fakultas]
 - [KONFIRMASI: aktivitas rutin lab]
 - [KONFIRMASI: tumpukan teknologi lab]
-- [KONFIRMASI: tautan pendek alat setelah deploy]
 - [KONFIRMASI: ketersediaan proyektor, HDMI, dan papan tulis di keenam ruangan]
