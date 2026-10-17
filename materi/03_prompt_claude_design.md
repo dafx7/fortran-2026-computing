@@ -42,19 +42,21 @@ Buatkan slide deck presentasi 16:9 berisi **16 slide** (tidak lebih) untuk sesi 
 ### Slide 4. Computing Laboratory (menit 5 sampai 8)
 - Judul: **Computing Laboratory**
 - Isi:
-  - Fakultas Informatika, Telkom University
+  - Fakultas Informatika, Telkom University · berdiri 2014 · Pembina: Gia Septiana Wulandari, S.Si., M.Sc., Ph.D.
   - Fokus: Computational Intelligence dan optimasi
   - Pondasi: competitive programming untuk cara berpikir algoritmik
   - Metaheuristik: algoritma genetika, PSO, ant colony, simulated annealing, Komodo Mlipir Algorithm (dikembangkan di Telkom University)
-  - Peran di fakultas: [KONFIRMASI: peran spesifik lab di fakultas]
-  - Aktivitas: [KONFIRMASI: aktivitas rutin lab]
+  - Peran: membangun kemampuan mahasiswa dan mendorong riset mahasiswa bersama dosen
+  - Tiga jenjang: Basic Study Group (fondasi, terhubung ke Alpro) · Advance Study Group (AI/ML/Optimization atau Competitive Programming) · Research Group (riset dan publikasi)
+  - Juga: kontes tahunan CCP (terbuka untuk seluruh mahasiswa Telkom University) dan responsi UTS/UAS
+  - Jejak kompetisi (strip kecil di bawah): Juara 2 Gemastik XVIII ICT Scientific Paper · Juara 2 Datavidia Arkavidia 10.0 · Finalis ICPC Asia Jakarta 2022, 2023, 2024
 - Catatan pembicara: Belajar dipandang sebagai optimasi. Lab mendalami machine learning yang berpijak pada optimasi supaya tidak berhenti pada memanggil library.
 
 ### Slide 5. Lab, DSIS, dan karier (menit 8 sampai 13)
 - Judul: **Lab kami, DSIS, dan arah karier**
 - Kiri: diagram dua lingkaran beririsan. Kiri "DSIS: Data Science and AI, mengolah data menjadi prediksi dan keputusan". Kanan "Computing Lab: Computational Intelligence dan optimasi". Irisan: "Melatih model = mencari pengaturan terbaik".
 - Kanan, tiga kartu peran: Data Scientist (menggali pola dari data) · Machine Learning Engineer (membangun dan melatih model) · AI Engineer (merancang sistem cerdas untuk masalah nyata)
-- Baris bawah: Teknologi: [KONFIRMASI: tumpukan teknologi lab]
+- Baris bawah: "Jalur AI/ML lab: dari gradient descent dan metaheuristik sampai model siap pakai (API, database, Docker)".
 - Catatan pembicara: Hampir setiap model machine learning dilatih dengan optimasi. Di situlah lab kami bekerja. Ketiga peran butuh pemahaman optimasi.
 
 ### Slide 6. Publikasi Ilmiah Terpilih 2026 (menit 13 sampai 15)

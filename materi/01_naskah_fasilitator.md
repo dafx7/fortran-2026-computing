@@ -84,23 +84,26 @@ Perpindahan ronde 1 ke ronde 2 hanya 15 menit (lantai 3 ke lantai 2). Laptop pre
 
 ### Menit 5-8: Identitas lab, fokus, aktivitas, peran di fakultas
 - **Lead berkata:**
-  - "Computing Laboratory adalah laboratorium di Fakultas Informatika Telkom University."
+  - "Computing Laboratory adalah laboratorium di bawah Fakultas Informatika Telkom University, berdiri sejak 2014. Tahun ini usianya 12 tahun. Pembina kami Ibu Gia Septiana Wulandari, S.Si., M.Sc., Ph.D."
   - "Fokus kami adalah Computational Intelligence dan optimasi. Pondasinya adalah competitive programming, karena di sana kita melatih cara berpikir algoritmik."
   - "Di lab, kami memandang belajar sebagai optimasi. Kami mempelajari metaheuristik seperti algoritma genetika, particle swarm optimization, ant colony optimization, simulated annealing, dan Komodo Mlipir Algorithm yang dikembangkan di Telkom University."
   - "Kami juga mendalami machine learning yang berpijak pada optimasi. Tujuannya supaya kita paham apa yang terjadi di dalam, tidak berhenti pada memanggil library."
-  - "Peran lab di fakultas: [KONFIRMASI: peran spesifik lab di fakultas, misalnya mendukung praktikum mata kuliah tertentu atau riset dosen]."
-  - "Aktivitas rutin kami: [KONFIRMASI: aktivitas rutin lab, misalnya kajian, pelatihan, atau pendampingan lomba]."
+  - "Peran lab di fakultas: membangun kemampuan mahasiswa yang tergabung di lab, dan mendorong riset mahasiswa dengan dukungan dosen Fakultas Informatika."
+  - "Kegiatan kami berjenjang. Basic Study Group untuk fondasi pemrograman, dan materinya terhubung langsung dengan Alpro: pseudocode di kelas teori, GoLang di praktikum, persis seperti yang kalian alami. Advance Study Group punya dua jalur, AI/ML/Optimization dan Competitive Programming. Lalu Research Group untuk riset dan publikasi bersama dosen."
+  - "Setiap tahun lab juga menyelenggarakan CCP, Computing Competitive Programming, kontes bergaya ICPC yang terbuka untuk seluruh mahasiswa Telkom University. Menjelang UTS dan UAS, ada responsi untuk mata kuliah seperti Alpro 1 dan Alpro 2 yang terbuka untuk seluruh mahasiswa."
+  - "Beberapa jejak kompetisi kami: juara 2 Gemastik XVIII bidang ICT Scientific Paper, juara 2 Datavidia di Arkavidia 10.0, dan finalis ICPC Asia Jakarta 2022, 2023, dan 2024."
 - **Layar:** Slide 4 (Computing Laboratory).
 - **Fasilitator lantai:** Bersiap menghitung jumlah peserta untuk pembentukan kelompok (lihat menit 15).
 - **Timekeeper:** Hitung jumlah peserta yang hadir secara diam-diam dan tulis di lembar catatan. Sampaikan angkanya ke fasilitator lantai.
-- **Jika waktu mepet, potong ini:** Lewati daftar lima metaheuristik, sebut "algoritma genetika dan kawan-kawannya".
+- **Jika waktu mepet, potong ini:** Lewati daftar lima metaheuristik, sebut "algoritma genetika dan kawan-kawannya". Jejak kompetisi cukup satu kalimat: "finalis ICPC Asia Jakarta tiga tahun berturut-turut".
+- **Catatan:** Ceritakan kegiatan lab sebagai informasi. Jangan mengajak bergabung, jangan menyebut timeline atau cara daftar. CCP dan responsi boleh disebut karena terbuka untuk seluruh mahasiswa.
 
 ### Menit 8-11: Ruang lingkup DSIS dan keterkaitan lab
 - **Lead berkata:**
   - "Kita hari ini hadir untuk Kelompok Keahlian DSIS, Data Science and AI."
   - "Secara sederhana, DSIS membahas cara mengolah data menjadi pengetahuan, lalu membangun sistem yang bisa memprediksi atau mengambil keputusan dari data itu."
   - "Hubungannya dengan lab kami ada di jantung prosesnya. Hampir setiap model machine learning dilatih dengan cara mencari pengaturan terbaik. Itu masalah optimasi. Computing Laboratory fokus pada bagian itu: Computational Intelligence dan optimasi, termasuk machine learning yang berpijak pada optimasi."
-  - "Teknologi yang dipakai di lab: [KONFIRMASI: tumpukan teknologi lab, misalnya bahasa pemrograman dan pustaka yang dipakai]."
+  - "Di jalur AI/ML/Optimization, materinya dimulai dari learning sebagai optimasi dan gradient descent, lalu metaheuristik dan gabungannya dengan machine learning, neural network yang dibangun dari nol, sampai model siap pakai dengan API, database, dan Docker. Yang kita coba hari ini adalah versi mini dari pertemuan-pertemuan awal jalur itu."
 - **Layar:** Slide 5 (Lab dan DSIS).
 - **Fasilitator lantai:** Mulai memetakan baris tempat duduk untuk menghitung kelompok.
 - **Timekeeper:** Kode 2 jari di menit 10.
@@ -366,7 +369,4 @@ Kelompok yang tampil di Blok 5 menceritakan generasi mereka di papan tulis.
 ## Hal yang harus dikonfirmasi sebelum sesi
 
 - [KONFIRMASI: nama lead, fasilitator lantai, dan timekeeper untuk Tim A dan Tim B]
-- [KONFIRMASI: peran spesifik lab di fakultas]
-- [KONFIRMASI: aktivitas rutin lab]
-- [KONFIRMASI: tumpukan teknologi lab]
 - [KONFIRMASI: ketersediaan proyektor, HDMI, dan papan tulis di keenam ruangan]

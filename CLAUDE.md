@@ -62,10 +62,16 @@ Room changes: 15 minutes between round 1 and 2 (floor 3 to floor 2). ISHOMA 11:3
 - Name: Computing Laboratory, Fakultas Informatika, Telkom University.
 - Focus: Computational Intelligence and Optimization, with competitive programming as the foundation of algorithmic thinking.
 - Learning is treated as optimization (gradient descent). The lab works on metaheuristics (genetic algorithms, particle swarm optimization, ant colony optimization, simulated annealing, and the Komodo Mlipir Algorithm developed at Telkom University) and on ML grounded in optimization, beyond only calling libraries.
-- 2026 publications (topics only, use as real examples): skin-tone bias in dermatology AI; 4-bit quantized small language models with CoT/PoT prompting; edge-deployable video-LLMs; a hybrid bee colony algorithm for itinerary recommendation.
+- Founded 2014 under Fakultas Informatika (12 years in 2026). Pembina: Gia Septiana Wulandari, S.Si., M.Sc., Ph.D. Goal: build the skills of students in the lab and drive student research with support from faculty lecturers.
+- Three levels: Basic Study Group (programming foundations, linked to the Alpro course: pseudocode in theory class, GoLang in practicum), Advance Study Group (track AI/ML/Optimization, or track Competitive Programming), Research Group (research and publications with lecturers). The AI/ML track covers learning as optimization, gradient descent, metaheuristics and hybrid metaheuristic-ML, neural networks from scratch, and deployment (API, database, UI, Docker, monitoring).
+- Open to all students (safe to mention): CCP (Computing Competitive Programming), an annual ICPC-style contest open to all Telkom University students (online preliminary on DomJudge, offline final for 20 finalists); responsi before UTS and UAS for Alpro 1, Alpro 2, STD, AKA, KA, DKA, ML, SA.
+- Competition record: 2nd place Gemastik XVIII (ICT Scientific Paper); 2nd place Datavidia, Arkavidia 10.0; finalist Gemastik XVII (Competitive Programming), ICPC Asia Jakarta 2022, 2023, 2024, Gemastik 2024, Gemastik 2025.
+- Publikasi Ilmiah Terpilih 2026 (exact titles, keep in English): (1) Gradient-Free Token Eviction for Edge-Deployable Video-LLMs in Ecological Monitoring, TENCON 2026; (2) A Contrastive and Uncertainty-Aware Analytics Framework for Reliable Lung Disease Detection from Chest Imaging, Healthcare Analytics (Elsevier); (3) An Empirical Analysis of Skin-Tone Bias and the Limitations of Random Oversampling in Dermatology AI, ICoICT 2026; (4) Syntactic Centrality in Classical Arabic: A Social Network Analysis of the Quranic Dependency Treebank, ICoDSA 2026; (5) XHABC: Enhanced Hybrid Artificial Bee Colony Algorithm for Recommending the Personalized Multi-Day Mixed Destination Tour, Journal of Big Data (Springer Nature).
+- Source for the facts above: the lab's "Open Mind Computing Lab 2026" deck (16 September 2026). That deck also contains recruitment content (timeline, registration QR); never reuse it.
+- The participant site's Tentang Lab tab still lists the earlier topic set; the owner decided not to update the site.
 - Official channels: Instagram https://www.instagram.com/computing.lab/ (@computing.lab) and website https://computinglab.tech
 - Recruitment is closed this year. Never promise or mention registration or open recruitment.
-- Unknown, must be marked `[KONFIRMASI: ...]` instead of invented: the lab's specific role in the faculty beyond the focus above, the exact technology stack the lab uses, member names, lecturer names, any numbers (members, awards, projects).
+- Unknown, must be marked `[KONFIRMASI: ...]` instead of invented: which members present in which room (Team A and Team B rosters), any numbers or awards not listed above.
 
 ## 4. Writing rules
 
