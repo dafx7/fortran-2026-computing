@@ -8,8 +8,7 @@
   var COLORS = { navy: '#0A2540', gold: '#F7B125', gd: '#e5484d', ga: '#16a39a', grid: '#e3e8ef', text: '#55657a', tryLine: '#8a96a8' };
   var GD_SPEED = [null, { delay: 260, adv: 1 }, { delay: 120, adv: 1 }, { delay: 50, adv: 1 }, { delay: 25, adv: 2 }, { delay: 16, adv: 6 }];
   var GA_SPEED = [null, { delay: 700, adv: 1 }, { delay: 380, adv: 1 }, { delay: 180, adv: 1 }, { delay: 90, adv: 1 }, { delay: 35, adv: 1 }];
-  var SPEED_LABEL = [null, 'sangat pelan', 'pelan', 'sedang', 'cepat', 'kilat'];
-  var MUT_PRESETS = { '0.05': 'Rendah', '0.3': 'Sedang', '0.8': 'Tinggi' };
+  var MUT_PRESETS = { '0.05': 'mutLow', '0.3': 'mutMid', '0.8': 'mutHigh' };
 
   function $(id) { return document.getElementById(id); }
   function el(tag, attrs, text) {
@@ -20,10 +19,20 @@
   }
   var fmt = C.formatSmart, fmtErr = C.formatError;
 
+  // Teks antarmuka dalam bahasa aktif (lihat i18n.js).
+  function t(key, vars) {
+    var dict = window.I18N[state.lang] || window.I18N.id;
+    var s = dict[key] !== undefined ? dict[key] : window.I18N.id[key];
+    if (s === undefined) return key;
+    if (vars) for (var k in vars) if (Object.prototype.hasOwnProperty.call(vars, k)) s = s.split('{' + k + '}').join(vars[k]);
+    return s;
+  }
+
   // ---------- Keadaan ----------
   function presetRows(id) {
     var sc = C.SCENARIOS.filter(function (s) { return s.id === id; })[0];
-    return sc.points.map(function (p) { return { x: String(p.x).replace('.', ','), y: String(p.y).replace('.', ',') }; });
+    var dec = C.getLang() === 'en' ? '.' : ',';
+    return sc.points.map(function (p) { return { x: String(p.x).replace('.', dec), y: String(p.y).replace('.', dec) }; });
   }
   function blankCustomRows() {
     var rows = [];
@@ -37,13 +46,14 @@
     return {
       scenarioId: C.SCENARIOS[0].id,
       data: data,
-      custom: { name: 'Skenario kami', xLabel: 'x', xUnit: '', yLabel: 'y', yUnit: '' },
+      custom: { name: '', xLabel: '', xUnit: '', yLabel: '', yUnit: '' },
       gd: { preset: 'pas', lr: null, steps: 100, speed: 3 },
       ga: { pop: 20, gens: 30, mutation: 0.3, seed: C.DEFAULT_SEED },
       group: '',
       conclusion: '',
       predictions: [],
-      present: false
+      present: false,
+      lang: 'id'
     };
   }
   var state = defaultState();
@@ -55,9 +65,9 @@
   function scenario() {
     if (state.scenarioId === 'custom') {
       var c = state.custom;
-      return { id: 'custom', name: c.name || 'Skenario sendiri', xLabel: c.xLabel || 'x', xUnit: c.xUnit || '', yLabel: c.yLabel || 'y', yUnit: c.yUnit || '', nonNegative: false };
+      return { id: 'custom', name: c.name || t('ourScenario'), xLabel: c.xLabel || 'x', xUnit: c.xUnit || '', yLabel: c.yLabel || 'y', yUnit: c.yUnit || '', nonNegative: false };
     }
-    return C.SCENARIOS.filter(function (s) { return s.id === state.scenarioId; })[0];
+    return C.localScenario(C.SCENARIOS.filter(function (s) { return s.id === state.scenarioId; })[0]);
   }
   function rows() { return state.data[state.scenarioId]; }
   function axisName(label, unit) { return unit ? label + ' (' + unit + ')' : label; }
@@ -92,8 +102,13 @@
         if (d.ga) ['pop', 'gens', 'mutation', 'seed'].forEach(function (k) { if (typeof d.ga[k] === 'number' && isFinite(d.ga[k])) base.ga[k] = d.ga[k]; });
         if (typeof d.group === 'string') base.group = d.group;
         if (typeof d.conclusion === 'string') base.conclusion = d.conclusion;
-        if (Array.isArray(d.predictions)) base.predictions = d.predictions.slice(0, 3);
+        if (Array.isArray(d.predictions)) {
+          base.predictions = d.predictions.slice(0, 3).filter(function (p) {
+            return p && isFinite(p.x) && Array.isArray(p.items) && p.items.every(function (it) { return it && isFinite(it.y) && (it.model === 'gd' || it.model === 'ga'); });
+          }).map(function (p) { return { x: p.x, items: p.items.map(function (it) { return { model: it.model, y: it.y }; }) }; });
+        }
         base.present = !!d.present;
+        if (d.lang === 'en' || d.lang === 'id') base.lang = d.lang;
       }
       state = base;
       return true;
@@ -165,9 +180,9 @@
     if (!(span > 0)) return [min];
     var step0 = span / count, mag = Math.pow(10, Math.floor(Math.log10(step0))), n = step0 / mag;
     var step = (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * mag;
-    var t = [], start = Math.ceil(min / step) * step;
-    for (var v = start; v <= max + step * 1e-9; v += step) t.push(Math.abs(v) < step * 1e-9 ? 0 : v);
-    return t;
+    var ticks = [], start = Math.ceil(min / step) * step;
+    for (var v = start; v <= max + step * 1e-9; v += step) ticks.push(Math.abs(v) < step * 1e-9 ? 0 : v);
+    return ticks;
   }
   function tickLabel(v) {
     var a = Math.abs(v);
@@ -209,13 +224,13 @@
     ctx.clearRect(0, 0, c.W, c.H);
     ctx.font = '12px system-ui, sans-serif';
     ctx.fillStyle = COLORS.text; ctx.strokeStyle = COLORS.grid; ctx.lineWidth = 1;
-    niceTicks(r.xMin, r.xMax, 6).forEach(function (t) {
-      var x = X(t); ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, c.H - pad.b); ctx.stroke();
-      ctx.textAlign = 'center'; ctx.fillText(tickLabel(t), x, c.H - pad.b + 15);
+    niceTicks(r.xMin, r.xMax, 6).forEach(function (tv) {
+      var x = X(tv); ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, c.H - pad.b); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.fillText(tickLabel(tv), x, c.H - pad.b + 15);
     });
-    niceTicks(r.yMin, r.yMax, 5).forEach(function (t) {
-      var y = Y(t); ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(c.W - pad.r, y); ctx.stroke();
-      ctx.textAlign = 'right'; ctx.fillText(tickLabel(t), pad.l - 6, y + 4);
+    niceTicks(r.yMin, r.yMax, 5).forEach(function (tv) {
+      var y = Y(tv); ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(c.W - pad.r, y); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(tickLabel(tv), pad.l - 6, y + 4);
     });
     var sc = scenario();
     ctx.fillStyle = COLORS.navy; ctx.font = '600 12px system-ui, sans-serif';
@@ -253,7 +268,7 @@
     }
     if (!model || !model.pts.length) {
       ctx.fillStyle = COLORS.text; ctx.font = '14px system-ui, sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('Belum ada data. Klik di sini untuk menambah titik.', c.W / 2, c.H / 2);
+      ctx.fillText(t('cvNoData'), c.W / 2, c.H / 2);
     }
   }
 
@@ -282,9 +297,9 @@
     var off = document.createElement('canvas'); off.width = N; off.height = N;
     var octx = off.getContext('2d'), img = octx.createImageData(N, N);
     for (var k = 0; k < N * N; k++) {
-      var t = Math.log(1 + vals[k] / s) / denom;
-      var col = heatColor(t);
-      var band = (t * 12) % 1;
+      var level = Math.log(1 + vals[k] / s) / denom;
+      var col = heatColor(level);
+      var band = (level * 12) % 1;
       var shade = band < 0.07 ? 0.9 : 1;
       img.data[k * 4] = col[0] * shade; img.data[k * 4 + 1] = col[1] * shade; img.data[k * 4 + 2] = col[2] * shade; img.data[k * 4 + 3] = 255;
     }
@@ -315,8 +330,8 @@
     if (!model || !model.norm) {
       ctx.fillStyle = '#eef1f6'; ctx.fillRect(0, 0, c.W, c.H);
       ctx.fillStyle = COLORS.text; ctx.font = '14px system-ui, sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('Isi minimal 2 titik data', c.W / 2, c.H / 2 - 8);
-      ctx.fillText('untuk melihat lanskap error.', c.W / 2, c.H / 2 + 12);
+      ctx.fillText(t('cvNeed1'), c.W / 2, c.H / 2 - 8);
+      ctx.fillText(t('cvNeed2'), c.W / 2, c.H / 2 + 12);
       return;
     }
     if (!model.heatImage) buildHeatImage();
@@ -327,8 +342,8 @@
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(model.heatImage, pad.l, pad.t, iw, ih);
     ctx.fillStyle = COLORS.navy; ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('w (kemiringan) →', pad.l + iw / 2, c.H - 6);
-    ctx.save(); ctx.translate(13, pad.t + ih / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('b (titik potong) →', 0, 0); ctx.restore();
+    ctx.fillText(t('cvW'), pad.l + iw / 2, c.H - 6);
+    ctx.save(); ctx.translate(13, pad.t + ih / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(t('cvB'), 0, 0); ctx.restore();
 
     ctx.save();
     ctx.beginPath(); ctx.rect(pad.l, pad.t, iw, ih); ctx.clip();
@@ -336,7 +351,7 @@
     ctx.strokeStyle = COLORS.navy; ctx.fillStyle = '#fff'; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.arc(X(C.GD_START.w), Y(C.GD_START.b), 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     ctx.fillStyle = COLORS.navy; ctx.font = '600 11px system-ui, sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText('awal', X(C.GD_START.w) + 10, Y(C.GD_START.b) + 4);
+    ctx.fillText(t('cvStart'), X(C.GD_START.w) + 10, Y(C.GD_START.b) + 4);
     // Coba-coba.
     if (run.tryPoint) {
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
@@ -384,7 +399,7 @@
       ctx.beginPath(); ctx.arc(bx, by, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       if (outside) {
         ctx.font = '700 11px system-ui, sans-serif';
-        var ot = 'bola keluar peta', ow = ctx.measureText(ot).width;
+        var ot = t('cvOut'), ow = ctx.measureText(ot).width;
         var ox = Math.min(Math.max(bx - ow / 2, pad.l + 4), pad.l + iw - ow - 4), oy = by > pad.t + ih / 2 ? by - 16 : by + 24;
         ctx.fillStyle = COLORS.gd; roundRect(ctx, ox - 4, oy - 12, ow + 8, 16, 4); ctx.fill();
         ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.fillText(ot, ox, oy);
@@ -395,7 +410,7 @@
       var sx = X(model.opt.w), sy = Y(model.opt.b);
       drawStar(ctx, sx, sy, 11, 5);
       // Label di tepi bawah peta supaya tidak menutupi jejak GD dan GA.
-      var label = 'jawaban terbaik (bisa dihitung karena modelnya kecil)';
+      var label = t('cvBest');
       ctx.font = '600 11px system-ui, sans-serif';
       var tw = ctx.measureText(label).width;
       var lx = Math.min(Math.max(sx - tw / 2, pad.l + 4), pad.l + iw - tw - 4);
@@ -448,7 +463,7 @@
     ctx.font = '12px system-ui, sans-serif';
     if (!series.length) {
       ctx.fillStyle = COLORS.text; ctx.textAlign = 'center';
-      ctx.fillText('Grafik error per iterasi muncul setelah latihan.', c.W / 2, c.H / 2 + 4);
+      ctx.fillText(t('cvLossEmpty'), c.W / 2, c.H / 2 + 4);
       return;
     }
     var optL = optOriginal().loss;
@@ -468,8 +483,8 @@
       ctx.textAlign = 'right'; ctx.fillText(e >= 6 || e < -3 ? '10^' + e : C.formatNumber(Math.pow(10, e), Math.max(0, -e)), pad.l - 5, y + 4);
     }
     ctx.textAlign = 'center';
-    ctx.fillText('iterasi (langkah GD atau generasi GA)', pad.l + (c.W - pad.l - pad.r) / 2, c.H - 6);
-    ctx.save(); ctx.translate(11, pad.t + (c.H - pad.t - pad.b) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('error', 0, 0); ctx.restore();
+    ctx.fillText(t('cvIter'), pad.l + (c.W - pad.l - pad.r) / 2, c.H - 6);
+    ctx.save(); ctx.translate(11, pad.t + (c.H - pad.t - pad.b) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(t('cvError'), 0, 0); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t, c.W - pad.l - pad.r, c.H - pad.t - pad.b); ctx.clip();
     if (optL > 0) {
       ctx.strokeStyle = COLORS.gold; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
@@ -514,7 +529,7 @@
   // ---------- Latihan ----------
   function requireModel() {
     if (!model || !model.norm) {
-      toast(model && model.invalid ? model.invalid : 'Data belum cukup untuk dilatih.');
+      toast(model && model.invalid ? model.invalid : t('noData'));
       return false;
     }
     return true;
@@ -527,7 +542,7 @@
     run.gd = { result: res, shown: 0, preset: state.gd.preset };
     run.lastPred = null;
     $('gdWarn').textContent = '';
-    $('gdResult').textContent = 'Melatih...';
+    $('gdResult').textContent = t('training');
     var total = res.path.length - 1;
     if (instant) { run.gd.shown = total; drawAll(); gdDone(); }
     else startAnim('gd', total, run.gd, GD_SPEED, gdDone);
@@ -544,16 +559,17 @@
     if (!run.gd) return;
     var r = run.gd.result, o = C.toOriginal(model.norm, r.w, r.b);
     var opt = optOriginal(), loss = C.lossToOriginal(model.norm, r.loss);
+    $('gdWarn').textContent = '';
     if (r.diverged) {
-      $('gdWarn').textContent = 'Error membesar, langkah terlalu jauh. Coba learning rate yang lebih kecil.';
-      appendLine(box, 'GD dihentikan setelah ' + r.evals + ' langkah karena error terus membesar.');
-      appendLine(box, 'Evaluasi error: ' + r.evals + '.');
+      $('gdWarn').textContent = t('diverged');
+      appendLine(box, t('gdStopped', { n: r.evals }));
+      appendLine(box, t('evals', { n: r.evals }));
       return;
     }
     var gap = C.gapPercent(r.loss, model.opt.loss);
-    appendLine(box, 'Error akhir: ' + fmtErr(loss) + errUnit() + (gap === null ? '' : ' (selisih ' + C.formatNumber(gap, gap < 10 ? 2 : 0) + '% dari jawaban terbaik)') + '.', true);
-    appendLine(box, 'Garis: y = ' + fmt(o.w) + '·x ' + signed(o.b) + '. Evaluasi error: ' + r.evals + '.');
-    if (gap !== null && gap > 10) appendLine(box, 'Belum sampai lembah. Tambah langkah atau perbesar learning rate.');
+    appendLine(box, t('gdFinal', { e: fmtErr(loss) + errUnit(), gap: gap === null ? '' : t('gap', { p: C.formatNumber(gap, gap < 10 ? 2 : 0) }) }), true);
+    appendLine(box, t('lineEvals', { w: fmt(o.w), b: signed(o.b), n: r.evals }));
+    if (gap !== null && gap > 10) appendLine(box, t('notThere'));
   }
   function signed(v) { return v < 0 ? '- ' + fmt(-v) : '+ ' + fmt(v); }
   function appendLine(box, text, strong) { var p = el('p', null, text); if (strong) p.style.fontWeight = '700'; box.appendChild(p); }
@@ -567,7 +583,7 @@
     run.gaMany = null;
     run.lastPred = null;
     $('gaManyBox').textContent = '';
-    $('gaResult').textContent = 'Menjalankan generasi...';
+    $('gaResult').textContent = t('generating');
     var total = res.history.length - 1;
     if (instant) { run.ga.shown = total; drawAll(); gaDone(); }
     else startAnim('ga', total, run.ga, GA_SPEED, gaDone);
@@ -579,8 +595,8 @@
     if (!run.ga) return;
     var r = run.ga.result, o = C.toOriginal(model.norm, r.w, r.b);
     var gap = C.gapPercent(r.loss, model.opt.loss);
-    appendLine(box, 'Error terbaik generasi terakhir: ' + fmtErr(C.lossToOriginal(model.norm, r.loss)) + errUnit() + (gap === null ? '' : ' (selisih ' + C.formatNumber(gap, 2) + '% dari jawaban terbaik)') + '.', true);
-    appendLine(box, 'Garis: y = ' + fmt(o.w) + '·x ' + signed(o.b) + '. Seed ' + r.seed + '. Evaluasi error: ' + r.pop + ' x ' + r.gens + ' = ' + r.evals + '.');
+    appendLine(box, t('gaFinal', { e: fmtErr(C.lossToOriginal(model.norm, r.loss)) + errUnit(), gap: gap === null ? '' : t('gap', { p: C.formatNumber(gap, 2) }) }), true);
+    appendLine(box, t('gaLine', { w: fmt(o.w), b: signed(o.b), seed: r.seed, pop: r.pop, gens: r.gens, n: r.evals }));
   }
   function trainGAMany() {
     if (!requireModel()) return;
@@ -600,11 +616,11 @@
     if (!run.gaMany) return;
     var m = run.gaMany, norm = model.norm, optL = model.opt.loss;
     var wrap = el('div', { 'class': 'table-scroll' });
-    var t = el('table', { id: 'gaManyTable' });
-    t.style.marginTop = '8px';
+    var tbl = el('table', { id: 'gaManyTable' });
+    tbl.style.marginTop = '8px';
     var head = el('tr');
-    ['Jalan', 'Seed', 'Error', 'w', 'b', 'Evaluasi', 'Selisih'].forEach(function (h, i) { head.appendChild(el('th', i >= 2 ? { 'class': 'num' } : null, h)); });
-    var thead = el('thead'); thead.appendChild(head); t.appendChild(thead);
+    [t('thRun'), t('thSeed'), t('thError'), 'w', 'b', t('thEvals'), t('thGap')].forEach(function (h, i) { head.appendChild(el('th', i >= 2 ? { 'class': 'num' } : null, h)); });
+    var thead = el('thead'); thead.appendChild(head); tbl.appendChild(thead);
     var tb = el('tbody');
     m.runs.forEach(function (r, i) {
       var o = C.toOriginal(norm, r.w, r.b), gap = C.gapPercent(r.loss, optL);
@@ -613,7 +629,7 @@
         .forEach(function (v, j) { tr.appendChild(el('td', j >= 2 ? { 'class': 'num' } : null, v)); });
       tb.appendChild(tr);
     });
-    [['Terbaik', m.stats.best], ['Terburuk', m.stats.worst], ['Rata-rata', m.stats.mean]].forEach(function (row) {
+    [[t('best'), m.stats.best], [t('worst'), m.stats.worst], [t('mean'), m.stats.mean]].forEach(function (row) {
       var gap = C.gapPercent(row[1], optL);
       var tr = el('tr', { 'class': 'stat' });
       tr.appendChild(el('td', { colspan: '2' }, row[0]));
@@ -622,19 +638,19 @@
       tr.appendChild(el('td', { 'class': 'num' }, gap === null ? '-' : C.formatNumber(gap, 2) + '%'));
       tb.appendChild(tr);
     });
-    t.appendChild(tb); wrap.appendChild(t); box.appendChild(wrap);
-    box.appendChild(el('p', { 'class': 'muted small' }, 'Jawaban terbaik dari rumus: error ' + fmtErr(optOriginal().loss) + errUnit() + '. Selisih = seberapa persen error GA lebih besar dari jawaban terbaik. Baris emas adalah jalan terbaik, dipakai untuk prediksi "GA terbaik".'));
+    tbl.appendChild(tb); wrap.appendChild(tbl); box.appendChild(wrap);
+    box.appendChild(el('p', { 'class': 'muted small' }, t('gaManyNote', { e: fmtErr(optOriginal().loss) + errUnit() })));
   }
   function renderEvalCompare() {
     var parts = [];
-    if (run.gd) parts.push('GD ' + run.gd.result.evals + ' (satu per langkah)');
+    if (run.gd) parts.push(t('cmpGd', { n: run.gd.result.evals }));
     var g = run.ga ? run.ga.result : null;
-    if (g) parts.push('GA ' + g.pop + ' x ' + g.gens + ' = ' + g.evals + (run.gaMany ? ' per jalan' : ''));
-    $('evalCompare').textContent = parts.length ? 'Jumlah evaluasi error: ' + parts.join(', ') + '.' : '';
+    if (g) parts.push(t('cmpGa', { pop: g.pop, gens: g.gens, n: g.evals }) + (run.gaMany ? t('cmpPerRun') : ''));
+    $('evalCompare').textContent = parts.length ? t('cmp', { parts: parts.join(', ') }) : '';
     var info = $('optInfo');
     if (model && model.norm && anyRun()) {
       var o = optOriginal();
-      info.textContent = 'Jawaban terbaik (rumus pasti): y = ' + fmt(o.w) + '·x ' + signed(o.b) + ', error ' + fmtErr(o.loss) + errUnit() + '.';
+      info.textContent = t('optInfo', { w: fmt(o.w), b: signed(o.b), e: fmtErr(o.loss) + errUnit() });
     } else info.textContent = '';
   }
 
@@ -650,10 +666,10 @@
     if (!avail.length) {
       var any = ['gd', 'ga'].filter(function (k) { return modelOf(k); });
       var msg;
-      if (!model || !model.norm) msg = 'Data belum cukup. Isi minimal 2 titik data, lalu latih model.';
-      else if (run.gd && run.gd.result.diverged && !gaBest()) msg = 'Model GD berhenti karena error membesar. Latih ulang dengan learning rate yang lebih kecil, atau jalankan GA.';
-      else if (any.length) msg = 'Model ' + (choice === 'gd' ? 'GD' : 'GA') + ' belum ada. Pilih "Keduanya" atau latih model itu terlebih dahulu.';
-      else msg = 'Model belum dilatih. Jalankan GD atau GA terlebih dahulu.';
+      if (!model || !model.norm) msg = t('predNoData');
+      else if (run.gd && run.gd.result.diverged && !gaBest()) msg = t('predGdDiverged');
+      else if (any.length) msg = t('predMissing', { m: choice === 'gd' ? 'GD' : 'GA' });
+      else msg = t('predUntrained');
       out.appendChild(el('p', { 'class': 'pred-note' }, msg));
       return;
     }
@@ -667,15 +683,15 @@
       if (!r.ok) { out.appendChild(el('p', { 'class': 'pred-note' }, r.text)); return; }
       var p = el('p', { 'class': 'pred-line' });
       p.appendChild(el('span', { 'class': 'sw ' + (k === 'gd' ? 'sw-gd' : 'sw-ga') }));
-      p.appendChild(document.createTextNode(' ' + (k === 'gd' ? 'GD' : 'GA terbaik') + ': ' + r.text));
+      p.appendChild(document.createTextNode(' ' + (k === 'gd' ? t('predGd') : t('predGa')) + ': ' + r.text));
       out.appendChild(p);
       if (!notes.length) notes = r.notes;
-      record.x = r.x; record.items.push({ model: k, y: r.y, text: r.text });
+      record.x = r.x; record.items.push({ model: k, y: r.y });
       lp.x = r.x; lp.ys.push(r.y); lp.colors.push(k === 'gd' ? COLORS.gd : COLORS.ga);
     }
     notes.forEach(function (n) { out.appendChild(el('p', { 'class': 'pred-note' }, n)); });
     var missing = kinds.filter(function (k) { return avail.indexOf(k) < 0; });
-    if (missing.length && choice === 'both') out.appendChild(el('p', { 'class': 'muted small' }, 'Model ' + (missing[0] === 'gd' ? 'GD' : 'GA') + ' belum ada, jadi hanya satu model yang menjawab.'));
+    if (missing.length && choice === 'both') out.appendChild(el('p', { 'class': 'muted small' }, t('predOnlyOne', { m: missing[0] === 'gd' ? 'GD' : 'GA' })));
     run.lastPred = lp;
     state.predictions = [record].concat(state.predictions.filter(function (q) { return q.x !== record.x; })).slice(0, 3);
     saveDraft(); renderKartu(); drawPlot();
@@ -703,39 +719,41 @@
     return d;
   }
   function pct(v) { return v === null || v === undefined ? '-' : C.formatNumber(v, 2) + '%'; }
-  function lrName(p) { return p === 'kecil' ? ' (Terlalu kecil)' : p === 'pas' ? ' (Pas)' : p === 'besar' ? ' (Terlalu besar)' : ''; }
-  function mutName(m) { var k = String(m); return MUT_PRESETS[k] ? ' (' + MUT_PRESETS[k] + ')' : ''; }
+  function lrName(p) { return p === 'kecil' ? ' (' + t('lrKecil') + ')' : p === 'pas' ? ' (' + t('lrPas') + ')' : p === 'besar' ? ' (' + t('lrBesar') + ')' : ''; }
+  function mutName(m) { var k = String(m); return MUT_PRESETS[k] ? ' (' + t(MUT_PRESETS[k]) + ')' : ''; }
+  function predText(x, y) { return C.predictionText(scenario(), x, y); }
+  function vsText(sc) { return t('kVs', { x: axisName(sc.xLabel, sc.xUnit), y: axisName(sc.yLabel, sc.yUnit) }); }
   function kartuLines() {
     var d = kartuData(), u = errUnit(), L = [];
-    L.push('PREDIKTOR, Kartu Hasil Kelompok ' + (d.group || '-'));
+    L.push(t('sTitle', { g: d.group || '-' }));
     L.push('Computing Laboratory, FORTRAN 2026');
-    L.push('Skenario: ' + d.sc.name + ' (' + axisName(d.sc.xLabel, d.sc.xUnit) + ' terhadap ' + axisName(d.sc.yLabel, d.sc.yUnit) + ')');
-    L.push('Jumlah data: ' + d.n + ' titik');
+    L.push(t('sScenario', { name: d.sc.name, vs: vsText(d.sc) }));
+    L.push(t('sData', { n: d.n }));
     if (d.gd) {
-      L.push('GD: learning rate ' + C.formatNumber(d.gd.lr, 4) + lrName(d.gd.preset) + ', ' + d.gd.steps + ' langkah');
-      L.push(d.gd.diverged ? '  Berhenti karena error membesar (langkah terlalu jauh), ' + d.gd.evals + ' evaluasi' : '  Error akhir ' + fmtErr(d.gd.loss) + u + ', selisih ' + pct(d.gd.gap) + ', ' + d.gd.evals + ' evaluasi');
-    } else L.push('GD: belum dijalankan');
+      L.push(t('sGd', { lr: C.formatNumber(d.gd.lr, 4), name: lrName(d.gd.preset), n: d.gd.steps }));
+      L.push(d.gd.diverged ? t('sGdStopped', { n: d.gd.evals }) : t('sGdFinal', { e: fmtErr(d.gd.loss) + u, p: pct(d.gd.gap), n: d.gd.evals }));
+    } else L.push(t('sGdNone'));
     if (d.ga5) {
-      L.push('GA 5 kali: populasi ' + d.ga5.pop + ', generasi ' + d.ga5.gens + ', mutasi ' + C.formatNumber(d.ga5.mutation, 2) + mutName(d.ga5.mutation) + ', seed ' + d.ga5.seed + ' sampai ' + (d.ga5.seed + 4));
-      L.push('  Terbaik ' + fmtErr(d.ga5.best) + u + ' (selisih ' + pct(d.ga5.gapBest) + '), terburuk ' + fmtErr(d.ga5.worst) + u + ' (selisih ' + pct(d.ga5.gapWorst) + '), rata-rata ' + fmtErr(d.ga5.mean) + u);
-      L.push('  ' + d.ga5.evals + ' evaluasi per jalan');
+      L.push(t('sGa5', { pop: d.ga5.pop, gens: d.ga5.gens, m: C.formatNumber(d.ga5.mutation, 2), name: mutName(d.ga5.mutation), s1: d.ga5.seed, s2: d.ga5.seed + 4 }));
+      L.push(t('sGa5Stats', { b: fmtErr(d.ga5.best) + u, pb: pct(d.ga5.gapBest), w: fmtErr(d.ga5.worst) + u, pw: pct(d.ga5.gapWorst), m: fmtErr(d.ga5.mean) + u }));
+      L.push(t('sGa5Evals', { n: d.ga5.evals }));
     } else if (d.ga1) {
-      L.push('GA 1 kali: populasi ' + d.ga1.pop + ', generasi ' + d.ga1.gens + ', mutasi ' + C.formatNumber(d.ga1.mutation, 2) + ', seed ' + d.ga1.seed);
-      L.push('  Error ' + fmtErr(d.ga1.loss) + u + ', selisih ' + pct(d.ga1.gap) + ', ' + d.ga1.evals + ' evaluasi');
-    } else L.push('GA: belum dijalankan');
-    if (d.opt && anyRun()) L.push('Jawaban terbaik (rumus): error ' + fmtErr(d.opt.loss) + u);
+      L.push(t('sGa1', { pop: d.ga1.pop, gens: d.ga1.gens, m: C.formatNumber(d.ga1.mutation, 2), s: d.ga1.seed }));
+      L.push(t('sGa1Res', { e: fmtErr(d.ga1.loss) + u, p: pct(d.ga1.gap), n: d.ga1.evals }));
+    } else L.push(t('sGaNone'));
+    if (d.opt && anyRun()) L.push(t('sOpt', { e: fmtErr(d.opt.loss) + u }));
     if (d.preds.length) {
-      L.push('Prediksi:');
-      d.preds.forEach(function (p) { p.items.forEach(function (it) { L.push('  ' + (it.model === 'gd' ? 'GD' : 'GA') + ': ' + it.text); }); });
+      L.push(t('sPreds'));
+      d.preds.forEach(function (p) { p.items.forEach(function (it) { L.push('  ' + (it.model === 'gd' ? 'GD' : 'GA') + ': ' + predText(p.x, it.y)); }); });
     }
-    L.push('Kesimpulan: ' + (d.conclusion || '-'));
+    L.push(t('sConcl', { c: d.conclusion || '-' }));
     return L;
   }
   function renderKartu() {
     var d = kartuData(), u = errUnit(), card = $('hasilCard');
     card.textContent = '';
     var head = el('div', { 'class': 'hasil-head' });
-    head.appendChild(el('strong', null, 'Kelompok ' + (d.group || '...')));
+    head.appendChild(el('strong', null, t('kGroup', { g: d.group || '...' })));
     head.appendChild(el('span', null, 'Prediktor · ' + d.sc.name));
     card.appendChild(head);
     var body = el('div', { 'class': 'hasil-body' });
@@ -744,28 +762,29 @@
       lines.forEach(function (l) { s.appendChild(el('p', null, l)); });
       body.appendChild(s);
     }
-    section('Data', [axisName(d.sc.xLabel, d.sc.xUnit) + ' terhadap ' + axisName(d.sc.yLabel, d.sc.yUnit), d.n + ' titik data']
-      .concat(d.opt && anyRun() ? ['Jawaban terbaik (rumus): error ' + fmtErr(d.opt.loss) + u] : []));
-    if (d.gd) section('Gradient Descent', ['Learning rate ' + C.formatNumber(d.gd.lr, 4) + lrName(d.gd.preset) + ', ' + d.gd.steps + ' langkah',
-      d.gd.diverged ? 'Berhenti: error membesar' : 'Error akhir ' + fmtErr(d.gd.loss) + u + ' (selisih ' + pct(d.gd.gap) + ')', d.gd.evals + ' evaluasi']);
-    else section('Gradient Descent', ['Belum dijalankan']);
-    if (d.ga5) section('Algoritma Genetika, 5 kali', ['Populasi ' + d.ga5.pop + ', generasi ' + d.ga5.gens + ', mutasi ' + C.formatNumber(d.ga5.mutation, 2) + mutName(d.ga5.mutation),
-      'Terbaik ' + fmtErr(d.ga5.best) + u + ' (' + pct(d.ga5.gapBest) + ')', 'Terburuk ' + fmtErr(d.ga5.worst) + u + ' (' + pct(d.ga5.gapWorst) + ')', 'Rata-rata ' + fmtErr(d.ga5.mean) + u, d.ga5.evals + ' evaluasi per jalan']);
-    else if (d.ga1) section('Algoritma Genetika, 1 kali', ['Populasi ' + d.ga1.pop + ', generasi ' + d.ga1.gens, 'Error ' + fmtErr(d.ga1.loss) + u + ' (' + pct(d.ga1.gap) + ')', d.ga1.evals + ' evaluasi', 'Klik "Jalankan 5 kali" untuk tabel lengkap']);
-    else section('Algoritma Genetika', ['Belum dijalankan']);
-    var ps = el('div'); ps.appendChild(el('h4', null, 'Prediksi'));
+    section(t('kData'), [vsText(d.sc), t('kPoints', { n: d.n })]
+      .concat(d.opt && anyRun() ? [t('kOpt', { e: fmtErr(d.opt.loss) + u })] : []));
+    if (d.gd) section('Gradient Descent', [t('kLr', { lr: C.formatNumber(d.gd.lr, 4), name: lrName(d.gd.preset), n: d.gd.steps }),
+      d.gd.diverged ? t('kStopped') : t('kFinal', { e: fmtErr(d.gd.loss) + u, p: pct(d.gd.gap) }), t('kEvals', { n: d.gd.evals })]);
+    else section('Gradient Descent', [t('kNotRun')]);
+    if (d.ga5) section(t('kGa5'), [t('kGaSet', { pop: d.ga5.pop, gens: d.ga5.gens, m: C.formatNumber(d.ga5.mutation, 2), name: mutName(d.ga5.mutation) }),
+      t('kBest', { e: fmtErr(d.ga5.best) + u, p: pct(d.ga5.gapBest) }), t('kWorst', { e: fmtErr(d.ga5.worst) + u, p: pct(d.ga5.gapWorst) }),
+      t('kMean', { e: fmtErr(d.ga5.mean) + u }), t('kEvalsRun', { n: d.ga5.evals })]);
+    else if (d.ga1) section(t('kGa1'), [t('kGaSet1', { pop: d.ga1.pop, gens: d.ga1.gens }), t('kGaErr', { e: fmtErr(d.ga1.loss) + u, p: pct(d.ga1.gap) }), t('kEvals', { n: d.ga1.evals }), t('kRun5Hint')]);
+    else section(t('kGa'), [t('kNotRun')]);
+    var ps = el('div'); ps.appendChild(el('h4', null, t('kPreds')));
     if (d.preds.length) {
       var ul = el('ul');
-      d.preds.forEach(function (p) { p.items.forEach(function (it) { ul.appendChild(el('li', null, (it.model === 'gd' ? 'GD: ' : 'GA: ') + it.text)); }); });
+      d.preds.forEach(function (p) { p.items.forEach(function (it) { ul.appendChild(el('li', null, (it.model === 'gd' ? 'GD: ' : 'GA: ') + predText(p.x, it.y))); }); });
       ps.appendChild(ul);
-    } else ps.appendChild(el('p', null, 'Belum ada prediksi'));
+    } else ps.appendChild(el('p', null, t('kNoPreds')));
     body.appendChild(ps);
     var k = el('div', { 'class': 'hasil-kesimpulan' });
-    k.appendChild(el('h4', null, 'Kesimpulan kelompok'));
-    k.appendChild(el('p', null, d.conclusion || 'Tulis satu kalimat kesimpulan di kolom sebelah kiri.'));
+    k.appendChild(el('h4', null, t('kConcl')));
+    k.appendChild(el('p', null, d.conclusion || t('kConclEmpty')));
     body.appendChild(k);
     card.appendChild(body);
-    card.appendChild(el('div', { 'class': 'hasil-foot' }, 'Computing Laboratory · FORTRAN 2026 · Dua Cara Belajar'));
+    card.appendChild(el('div', { 'class': 'hasil-foot' }, t('kFoot')));
   }
   function copySummary() {
     var text = kartuLines().join('\n');
@@ -774,11 +793,11 @@
       fb.hidden = false; fb.value = text; fb.focus(); fb.select();
       var ok = false;
       try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-      toast(ok ? 'Ringkasan disalin.' : 'Salin teks di kotak ringkasan secara manual.');
+      toast(ok ? t('copied') : t('copyManual'));
     }
     try {
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(function () { fb.hidden = true; toast('Ringkasan disalin.'); }, fallback);
+        navigator.clipboard.writeText(text).then(function () { fb.hidden = true; toast(t('copied')); }, fallback);
         return;
       }
     } catch (e) { /* lanjut ke cara cadangan */ }
@@ -788,8 +807,8 @@
   // ---------- Tampilan kontrol ----------
   var toastTimer = null;
   function toast(msg) {
-    var t = $('toast'); t.textContent = msg; t.hidden = false;
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 3200);
+    var box = $('toast'); box.textContent = msg; box.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { box.hidden = true; }, 3200);
   }
   function syncControls() {
     var lr = currentLr();
@@ -797,7 +816,7 @@
     $('lrOut').textContent = C.formatNumber(lr, lr < 0.1 ? 4 : 3);
     document.querySelectorAll('[data-lr]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lr') === state.gd.preset)); });
     $('stepsSlider').value = String(state.gd.steps); $('stepsOut').textContent = String(state.gd.steps);
-    $('speedSlider').value = String(state.gd.speed); $('speedOut').textContent = SPEED_LABEL[state.gd.speed];
+    $('speedSlider').value = String(state.gd.speed); $('speedOut').textContent = t('speed' + state.gd.speed);
     $('popSlider').value = String(state.ga.pop); $('popOut').textContent = String(state.ga.pop);
     $('genSlider').value = String(state.ga.gens); $('genOut').textContent = String(state.ga.gens);
     $('mutSlider').value = String(state.ga.mutation); $('mutOut').textContent = C.formatNumber(state.ga.mutation, 2);
@@ -810,10 +829,9 @@
   }
   function renderScenario() {
     var sel = $('scenarioSelect');
-    if (!sel.options.length) {
-      C.SCENARIOS.forEach(function (s) { sel.appendChild(el('option', { value: s.id }, s.name)); });
-      sel.appendChild(el('option', { value: 'custom' }, 'Skenario sendiri'));
-    }
+    sel.textContent = '';
+    C.SCENARIOS.forEach(function (s) { sel.appendChild(el('option', { value: s.id }, C.localScenario(s).name)); });
+    sel.appendChild(el('option', { value: 'custom' }, t('customOption')));
     sel.value = state.scenarioId;
     var isCustom = state.scenarioId === 'custom';
     $('customFields').hidden = !isCustom;
@@ -827,7 +845,7 @@
     var sc = scenario();
     $('thX').textContent = 'x: ' + axisName(sc.xLabel, sc.xUnit);
     $('thY').textContent = 'y: ' + axisName(sc.yLabel, sc.yUnit);
-    $('predLabel').textContent = 'Nilai ' + axisName(sc.xLabel, sc.xUnit);
+    $('predLabel').textContent = t('predValue', { x: axisName(sc.xLabel, sc.xUnit) });
   }
   function renderTable() {
     var tb = document.querySelector('#dataTable tbody');
@@ -837,12 +855,12 @@
       tr.appendChild(el('td', null, String(i + 1)));
       ['x', 'y'].forEach(function (key) {
         var td = el('td');
-        var inp = el('input', { type: 'text', inputmode: 'decimal', 'aria-label': key + ' baris ' + (i + 1), 'data-row': String(i), 'data-key': key });
+        var inp = el('input', { type: 'text', inputmode: 'decimal', 'aria-label': t('rowAria', { key: key, n: i + 1 }), 'data-row': String(i), 'data-key': key });
         inp.value = r[key];
         td.appendChild(inp); tr.appendChild(td);
       });
       var td = el('td');
-      var del = el('button', { type: 'button', 'class': 'btn-del', 'data-del': String(i), 'aria-label': 'Hapus baris ' + (i + 1) }, 'Hapus');
+      var del = el('button', { type: 'button', 'class': 'btn-del', 'data-del': String(i), 'aria-label': t('delAria', { n: i + 1 }) }, t('del'));
       td.appendChild(del); tr.appendChild(td);
       tb.appendChild(tr);
     });
@@ -851,10 +869,10 @@
   }
   function renderDataStatus() {
     var valid = parsedPoints().length, total = rows().length;
-    $('dataCount').textContent = valid + ' titik valid dari ' + total + ' baris. Disarankan 6 sampai 10 titik.';
+    $('dataCount').textContent = t('dataCount', { v: valid, t: total });
     var warn = '';
     var bad = rows().filter(function (r) { return (r.x.trim() !== '' || r.y.trim() !== '') && (C.parseNumber(r.x) === null || C.parseNumber(r.y) === null); }).length;
-    if (bad) warn = bad + ' baris belum lengkap atau bukan angka, jadi tidak dipakai. Contoh isian: 7 atau 2,5.';
+    if (bad) warn = t('dataBad', { n: bad });
     if (model && model.invalid) warn = (warn ? warn + ' ' : '') + model.invalid;
     $('dataWarn').textContent = warn;
   }
@@ -905,13 +923,13 @@
     });
     var tbody = document.querySelector('#dataTable tbody');
     tbody.addEventListener('input', function (e) {
-      var t = e.target; if (!t.hasAttribute('data-row')) return;
-      rows()[Number(t.getAttribute('data-row'))][t.getAttribute('data-key')] = t.value;
+      var inp = e.target; if (!inp.hasAttribute('data-row')) return;
+      rows()[Number(inp.getAttribute('data-row'))][inp.getAttribute('data-key')] = inp.value;
       dataChanged({ keepTable: true });
     });
     tbody.addEventListener('click', function (e) {
-      var t = e.target; if (!t.hasAttribute('data-del')) return;
-      rows().splice(Number(t.getAttribute('data-del')), 1); dataChanged();
+      var btn = e.target; if (!btn.hasAttribute('data-del')) return;
+      rows().splice(Number(btn.getAttribute('data-del')), 1); dataChanged();
     });
     $('btnAddRow').addEventListener('click', function () {
       if (rows().length >= MAX_ROWS) return;
@@ -928,9 +946,10 @@
       var dx = decimalsFor(g.r.xMax - g.r.xMin), dy = decimalsFor(g.r.yMax - g.r.yMin);
       var list = rows();
       var empty = list.filter(function (r) { return r.x.trim() === '' && r.y.trim() === ''; })[0];
-      if (!empty && list.length >= MAX_ROWS) { toast('Maksimal ' + MAX_ROWS + ' baris data.'); return; }
+      if (!empty && list.length >= MAX_ROWS) { toast(t('maxRows', { n: MAX_ROWS })); return; }
       var row = empty || { x: '', y: '' };
-      row.x = C.formatNumber(x, dx).replace(/\./g, ''); row.y = C.formatNumber(y, dy).replace(/\./g, '');
+      var groupSep = C.getLang() === 'en' ? /,/g : /\./g;
+      row.x = C.formatNumber(x, dx).replace(groupSep, ''); row.y = C.formatNumber(y, dy).replace(groupSep, '');
       if (!empty) list.push(row);
       dataChanged();
     });
@@ -943,12 +962,12 @@
     }
     function readout(p) {
       var o = C.toOriginal(model.norm, p.w, p.b), l = C.lossToOriginal(model.norm, C.lossNorm(model.norm, p.w, p.b));
-      return 'Garis y = ' + fmt(o.w) + '·x ' + signed(o.b) + ', error ' + fmtErr(l) + errUnit() + '.';
+      return t('readout', { w: fmt(o.w), b: signed(o.b), e: fmtErr(l) + errUnit() });
     }
-    $('heat').addEventListener('mousemove', function (e) { var p = heatPoint(e); if (p) $('heatReadout').textContent = readout(p) + ' Klik untuk mencoba garis ini.'; });
+    $('heat').addEventListener('mousemove', function (e) { var p = heatPoint(e); if (p) $('heatReadout').textContent = readout(p) + t('readoutClick'); });
     $('heat').addEventListener('click', function (e) {
       var p = heatPoint(e); if (!p) return;
-      run.tryPoint = p; $('heatReadout').textContent = 'Garis coba-coba: ' + readout(p);
+      run.tryPoint = p; $('heatReadout').textContent = t('tryLine') + readout(p);
       drawAll();
     });
 
@@ -978,6 +997,7 @@
     $('groupInput').addEventListener('input', function () { state.group = this.value; renderKartu(); saveDraft(); });
     $('conclusionInput').addEventListener('input', function () { state.conclusion = this.value; renderKartu(); saveDraft(); });
     $('btnCopy').addEventListener('click', copySummary);
+    $('btnLang').addEventListener('click', switchLang);
 
     $('btnMisi1').addEventListener('click', function () {
       state.scenarioId = C.SCENARIOS[0].id;
@@ -985,35 +1005,63 @@
       state.gd = { preset: 'pas', lr: null, steps: 100, speed: state.gd.speed };
       state.ga = { pop: 20, gens: 30, mutation: 0.3, seed: C.DEFAULT_SEED };
       renderScenario(); dataChanged();
-      toast('Misi 1 siap: skenario Jarak dan waktu tempuh.');
+      toast(t('misi1Ready'));
     });
     $('btnPakaiPreset').addEventListener('click', function () {
       state.gd.preset = 'pas'; state.gd.steps = 100;
       state.ga = { pop: 20, gens: 30, mutation: 0.3, seed: C.DEFAULT_SEED };
-      var msg = 'Pengaturan disarankan dipakai: learning rate Pas, 100 langkah, populasi 20, generasi 30, mutasi Sedang.';
+      var msg = t('presetApplied');
       if (parsedPoints().length < 6) {
         if (state.scenarioId === 'custom') {
-          var sc = C.SCENARIOS[1];
+          var sc = C.localScenario(C.SCENARIOS[1]);
           state.custom = { name: sc.name, xLabel: sc.xLabel, xUnit: sc.xUnit, yLabel: sc.yLabel, yUnit: sc.yUnit };
           state.data.custom = presetRows(sc.id);
         } else state.data[state.scenarioId] = presetRows(state.scenarioId);
-        msg += ' Contoh data juga diisi.';
+        msg += t('presetData');
       }
       renderScenario(); dataChanged(); toast(msg);
     });
     $('btnReset').addEventListener('click', function () {
       var ok = true;
-      try { ok = window.confirm('Hapus semua isian dan kembali ke awal?'); } catch (e) { ok = true; }
+      try { ok = window.confirm(t('resetConfirm')); } catch (e) { ok = true; }
       if (!ok) return;
-      stopAnim(); clearDraft(); state = defaultState();
+      var keepLang = state.lang;
+      stopAnim(); clearDraft(); state = defaultState(); state.lang = keepLang;
       rebuildModel(); invalidateRuns(); run.lastPred = null;
       ['gdResult', 'gdWarn', 'gaResult', 'gaManyBox', 'predOut'].forEach(function (id) { $(id).textContent = ''; });
       $('predInput').value = '';
-      renderAll(); toast('Semua isian sudah dikembalikan ke awal.');
+      $('heatReadout').textContent = t('heatHint');
+      renderAll(); toast(t('resetDone'));
     });
 
     var resizeTimer = null;
     window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawAll, 120); });
+  }
+  // Terapkan bahasa aktif ke teks statis halaman (atribut data-i18n dan data-i18n-attr).
+  function applyLang() {
+    C.setLang(state.lang);
+    document.documentElement.lang = state.lang;
+    document.title = t('pageTitle');
+    document.querySelectorAll('[data-i18n]').forEach(function (e) { e.textContent = t(e.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-attr]').forEach(function (e) {
+      e.getAttribute('data-i18n-attr').split(';').forEach(function (pair) {
+        var kv = pair.split(':');
+        if (kv.length === 2) e.setAttribute(kv[0].trim(), t(kv[1].trim()));
+      });
+    });
+  }
+  function switchLang() {
+    state.lang = state.lang === 'en' ? 'id' : 'en';
+    applyLang();
+    if (model && model.invalid) rebuildModel();
+    renderScenario(); renderTable(); syncControls();
+    if (!(anim && anim.type === 'gd')) renderGDResult();
+    if (!(anim && anim.type === 'ga')) renderGAResult();
+    renderGAMany(); renderEvalCompare(); renderKartu();
+    $('predOut').textContent = '';
+    $('heatReadout').textContent = t('heatHint');
+    if ($('draftNote').textContent) $('draftNote').textContent = t('restored');
+    drawAll(); saveDraft();
   }
   function decimalsFor(span) { return span > 50 ? 0 : span > 5 ? 1 : 2; }
   function showTab(name) {
@@ -1029,11 +1077,15 @@
   // ---------- Mulai ----------
   function init() {
     var restored = loadDraft();
+    // Tautan dengan ?lang=en atau ?lang=id memilih bahasa secara langsung.
+    var q = /[?&]lang=(en|id)(&|$)/.exec(location.search);
+    if (q) state.lang = q[1];
+    applyLang();
     rebuildModel();
     bind();
     showTab('praktik');
     renderAll();
-    if (restored) $('draftNote').textContent = 'Isian sebelumnya dipulihkan dari browser ini.';
+    if (restored) $('draftNote').textContent = t('restored');
     // Service worker dan manifest hanya untuk http(s). Dilewati saat dibuka dari file://.
     if (/^https?:$/.test(location.protocol)) {
       var link = document.createElement('link'); link.rel = 'manifest'; link.href = 'manifest.webmanifest';

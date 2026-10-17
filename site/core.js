@@ -17,23 +17,58 @@
   var GA_ALPHA = 0.3;
   var DEFAULT_SEED = 2026;
 
+  // Bahasa aktif untuk format angka dan kalimat. 'id' (bawaan) atau 'en'.
+  var lang = 'id';
+  var MSG = {
+    id: {
+      need2: 'Butuh minimal 2 titik data yang valid.',
+      needDistinct: 'Butuh minimal 2 titik dengan nilai x yang berbeda.',
+      fillX: 'Silakan isi nilai {x} terlebih dahulu.',
+      notNumber: 'Maaf, "{t}" belum bisa dibaca sebagai angka. Contoh isian: 7 atau 2,5.',
+      untrained: 'Model belum dilatih. Jalankan GD atau GA terlebih dahulu.',
+      sentence: 'Untuk {xl} {xv}, perkiraan {yl} sekitar {yv}.',
+      outside: 'Catatan: nilai ini berada di luar rentang data ({a} sampai {b}), jadi perkiraannya kurang dapat diandalkan.',
+      negative: 'Hasilnya negatif, padahal {yl} tidak mungkin negatif. Ini tanda garis lurus terlalu sederhana di daerah ini.'
+    },
+    en: {
+      need2: 'At least 2 valid data points are needed.',
+      needDistinct: 'At least 2 points with different x values are needed.',
+      fillX: 'Please enter a value for {x} first.',
+      notNumber: 'Sorry, "{t}" cannot be read as a number. Example input: 7 or 2.5.',
+      untrained: 'No model has been trained yet. Run GD or GA first.',
+      sentence: 'For {xl} {xv}, the estimated {yl} is about {yv}.',
+      outside: 'Note: this value is outside the data range ({a} to {b}), so the estimate is less reliable.',
+      negative: 'The result is negative, but {yl} cannot be negative. This shows a straight line is too simple in this region.'
+    }
+  };
+  function setLang(l) { lang = l === 'en' ? 'en' : 'id'; }
+  function getLang() { return lang; }
+  function msg(key, vars) {
+    var s = MSG[lang][key];
+    for (var k in vars) if (Object.prototype.hasOwnProperty.call(vars, k)) s = s.split('{' + k + '}').join(vars[k]);
+    return s;
+  }
+
   // Skenario preset. Semua data fiktif dan netral.
   var SCENARIOS = [
     {
       id: 'jarak', name: 'Jarak dan waktu tempuh',
       xLabel: 'jarak', xUnit: 'km', yLabel: 'waktu tempuh', yUnit: 'menit', nonNegative: true,
+      en: { name: 'Distance and travel time', xLabel: 'distance', xUnit: 'km', yLabel: 'travel time', yUnit: 'minutes' },
       points: [{ x: 1, y: 6 }, { x: 2, y: 9 }, { x: 3, y: 11 }, { x: 4, y: 15 }, { x: 5, y: 17 },
         { x: 6, y: 19 }, { x: 8, y: 26 }, { x: 10, y: 31 }]
     },
     {
       id: 'esteh', name: 'Suhu udara dan es teh terjual',
       xLabel: 'suhu udara', xUnit: '°C', yLabel: 'es teh terjual', yUnit: 'gelas', nonNegative: true,
+      en: { name: 'Air temperature and iced tea sold', xLabel: 'air temperature', xUnit: '°C', yLabel: 'iced tea sold', yUnit: 'glasses' },
       points: [{ x: 24, y: 30 }, { x: 25, y: 34 }, { x: 26, y: 37 }, { x: 27, y: 43 }, { x: 28, y: 45 },
         { x: 29, y: 52 }, { x: 30, y: 55 }, { x: 31, y: 58 }, { x: 32, y: 64 }]
     },
     {
       id: 'kantin', name: 'Pengunjung kantin dan porsi terjual',
       xLabel: 'jumlah pengunjung', xUnit: 'orang', yLabel: 'porsi terjual', yUnit: 'porsi', nonNegative: true,
+      en: { name: 'Canteen visitors and portions sold', xLabel: 'number of visitors', xUnit: 'people', yLabel: 'portions sold', yUnit: 'portions' },
       points: [{ x: 40, y: 33 }, { x: 55, y: 47 }, { x: 60, y: 50 }, { x: 75, y: 60 }, { x: 90, y: 74 },
         { x: 100, y: 80 }, { x: 120, y: 99 }, { x: 140, y: 112 }]
     }
@@ -74,13 +109,13 @@
   // Periksa apakah data cukup untuk dilatih.
   function validate(points) {
     var pts = cleanPoints(points);
-    if (pts.length < 2) return { ok: false, message: 'Butuh minimal 2 titik data yang valid.' };
+    if (pts.length < 2) return { ok: false, message: msg('need2') };
     var xs = {};
     var distinct = 0;
     for (var i = 0; i < pts.length; i++) {
       if (!xs[pts[i].x]) { xs[pts[i].x] = true; distinct++; }
     }
-    if (distinct < 2) return { ok: false, message: 'Butuh minimal 2 titik dengan nilai x yang berbeda.' };
+    if (distinct < 2) return { ok: false, message: msg('needDistinct') };
     return { ok: true, points: pts };
   }
 
@@ -308,15 +343,16 @@
     return (loss - optimum) / optimum * 100;
   }
 
-  // Format angka gaya Indonesia (koma desimal, titik ribuan).
+  // Format angka: gaya Indonesia (koma desimal, titik ribuan) atau gaya Inggris.
   function formatNumber(v, decimals) {
     if (v === null || v === undefined || !isFinite(v)) return '-';
     if (decimals === undefined) decimals = 2;
     var neg = v < 0;
     var s = Math.abs(v).toFixed(decimals);
     var parts = s.split('.');
-    var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    var out = parts.length > 1 ? intPart + ',' + parts[1] : intPart;
+    var group = lang === 'en' ? ',' : '.', dec = lang === 'en' ? '.' : ',';
+    var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, group);
+    var out = parts.length > 1 ? intPart + dec + parts[1] : intPart;
     if (neg && /[1-9]/.test(out)) out = '-' + out;
     return out;
   }
@@ -327,7 +363,8 @@
     var a = Math.abs(v);
     var d = a >= 10 ? 0 : a >= 1 ? 1 : 2;
     var s = formatNumber(v, d);
-    if (s.indexOf(',') >= 0) s = s.replace(/0+$/, '').replace(/,$/, '');
+    var dec = lang === 'en' ? '.' : ',';
+    if (s.indexOf(dec) >= 0) s = s.replace(/0+$/, '').replace(/[.,]$/, '');
     return s === '-0' ? '0' : s;
   }
 
@@ -351,7 +388,11 @@
     var s = String(text).trim();
     if (s === '') return null;
     s = s.replace(/\s/g, '');
-    if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
+    if (lang === 'en') {
+      // Gaya Inggris: koma ribuan, titik desimal. Koma tunggal tetap dibaca sebagai desimal.
+      if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s = s.replace(/,/g, '');
+      else s = s.replace(',', '.');
+    } else if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
     else s = s.replace(',', '.');
     if (!/^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/.test(s)) return null;
     var v = Number(s);
@@ -362,29 +403,43 @@
     return unit ? value + ' ' + unit : value;
   }
 
+  // Skenario dalam bahasa aktif (skenario preset punya versi Inggris).
+  function localScenario(scenario) {
+    if (lang !== 'en' || !scenario || !scenario.en) return scenario;
+    var out = {};
+    for (var k in scenario) if (Object.prototype.hasOwnProperty.call(scenario, k)) out[k] = scenario[k];
+    for (var j in scenario.en) if (Object.prototype.hasOwnProperty.call(scenario.en, j)) out[j] = scenario.en[j];
+    return out;
+  }
+
+  // Kalimat prediksi untuk nilai x dan y yang sudah dihitung.
+  function predictionText(scenario, x, y) {
+    return msg('sentence', {
+      xl: scenario.xLabel || 'x', xv: withUnit(formatSmart(x), scenario.xUnit),
+      yl: scenario.yLabel || 'y', yv: withUnit(formatSmart(y), scenario.yUnit)
+    });
+  }
+
   // Kalimat prediksi dalam konteks skenario.
   function predictionSentence(scenario, model, xText, range) {
     var x = parseNumber(xText);
     if (xText === null || xText === undefined || String(xText).trim() === '') {
-      return { ok: false, text: 'Silakan isi nilai ' + (scenario.xLabel || 'x') + ' terlebih dahulu.' };
+      return { ok: false, text: msg('fillX', { x: scenario.xLabel || 'x' }) };
     }
     if (x === null) {
-      return { ok: false, text: 'Maaf, "' + String(xText).trim() + '" belum bisa dibaca sebagai angka. Contoh isian: 7 atau 2,5.' };
+      return { ok: false, text: msg('notNumber', { t: String(xText).trim() }) };
     }
     if (!model) {
-      return { ok: false, text: 'Model belum dilatih. Jalankan GD atau GA terlebih dahulu.' };
+      return { ok: false, text: msg('untrained') };
     }
     var y = model.w * x + model.b;
-    var xs = formatSmart(x), ys = formatSmart(y);
-    var text = 'Untuk ' + (scenario.xLabel || 'x') + ' ' + withUnit(xs, scenario.xUnit) +
-      ', perkiraan ' + (scenario.yLabel || 'y') + ' sekitar ' + withUnit(ys, scenario.yUnit) + '.';
+    var text = predictionText(scenario, x, y);
     var notes = [];
     if (range && (x < range.xMin || x > range.xMax)) {
-      notes.push('Catatan: nilai ini berada di luar rentang data (' + formatSmart(range.xMin) + ' sampai ' +
-        formatSmart(range.xMax) + '), jadi perkiraannya kurang dapat diandalkan.');
+      notes.push(msg('outside', { a: formatSmart(range.xMin), b: formatSmart(range.xMax) }));
     }
     if (y < 0 && scenario.nonNegative) {
-      notes.push('Hasilnya negatif, padahal ' + (scenario.yLabel || 'y') + ' tidak mungkin negatif. Ini tanda garis lurus terlalu sederhana di daerah ini.');
+      notes.push(msg('negative', { yl: scenario.yLabel || 'y' }));
     }
     return { ok: true, x: x, y: y, text: text, notes: notes };
   }
@@ -397,6 +452,7 @@
     hessianMaxEig: hessianMaxEig, lrPresets: lrPresets, runGD: runGD, runGA: runGA,
     runGAMany: runGAMany, runStats: runStats, gapPercent: gapPercent,
     formatNumber: formatNumber, formatSmart: formatSmart, formatError: formatError,
-    parseNumber: parseNumber, predictionSentence: predictionSentence
+    parseNumber: parseNumber, predictionSentence: predictionSentence, predictionText: predictionText,
+    localScenario: localScenario, setLang: setLang, getLang: getLang
   };
 });

@@ -15,25 +15,28 @@
     <img src="icon.svg" alt="" width="34" height="34">
     <div style="min-width:0">
       <div class="brand-title">Prediktor</div>
-      <div class="brand-sub">Dua Cara Belajar · Computing Laboratory · FORTRAN 2026</div>
+      <div class="brand-sub" data-i18n="brandSub">Dua Cara Belajar · Computing Laboratory · FORTRAN 2026</div>
     </div>
   </div>
-  <button type="button" class="btn-ghost" id="btnPresent" aria-pressed="false">Mode Presentasi</button>
+  <div class="topbar-actions">
+    <button type="button" class="btn-ghost btn-lang" id="btnLang" data-i18n="langBtn" data-i18n-attr="title:langBtnTitle;aria-label:langBtnTitle" title="Switch to English" aria-label="Switch to English">EN</button>
+    <button type="button" class="btn-ghost" id="btnPresent" aria-pressed="false" data-i18n="present">Mode Presentasi</button>
+  </div>
 </header>
 
-<nav class="tabs" role="tablist" aria-label="Bagian alat">
-  <button class="tab" role="tab" id="tab-praktik" aria-controls="panel-praktik" aria-selected="true">Praktik</button>
-  <button class="tab" role="tab" id="tab-panduan" aria-controls="panel-panduan" aria-selected="false">Panduan</button>
-  <button class="tab" role="tab" id="tab-pseudocode" aria-controls="panel-pseudocode" aria-selected="false">Pseudocode</button>
-  <button class="tab" role="tab" id="tab-tentang" aria-controls="panel-tentang" aria-selected="false">Tentang Lab</button>
+<nav class="tabs" role="tablist" aria-label="Bagian alat" data-i18n-attr="aria-label:navAria">
+  <button class="tab" role="tab" id="tab-praktik" aria-controls="panel-praktik" aria-selected="true" data-i18n="tabPraktik">Praktik</button>
+  <button class="tab" role="tab" id="tab-panduan" aria-controls="panel-panduan" aria-selected="false" data-i18n="tabPanduan">Panduan</button>
+  <button class="tab" role="tab" id="tab-pseudocode" aria-controls="panel-pseudocode" aria-selected="false" data-i18n="tabPseudocode">Pseudocode</button>
+  <button class="tab" role="tab" id="tab-tentang" aria-controls="panel-tentang" aria-selected="false" data-i18n="tabTentang">Tentang Lab</button>
 </nav>
 
 <main>
 <!-- ===================== PRAKTIK ===================== -->
 <section class="tabpanel" id="panel-praktik" role="tabpanel" aria-labelledby="tab-praktik">
   <details class="misi" id="misiPanel" open>
-    <summary>Misi hari ini: buat Prediktor kelompok kalian</summary>
-    <div class="misi-grid">
+    <summary data-i18n="misiSummary">Misi hari ini: buat Prediktor kelompok kalian</summary>
+    <div class="misi-grid" data-lang="id">
       <div>
         <h3>Misi 1 (8 menit)</h3>
         <ol>
@@ -65,10 +68,42 @@
         <p class="muted small">Data harus fiktif dan netral. Jangan memakai data pribadi atau nilai siapa pun.</p>
       </div>
     </div>
+    <div class="misi-grid" data-lang="en">
+      <div>
+        <h3>Mission 1 (8 minutes)</h3>
+        <ol>
+          <li>Use the <b>Distance and travel time</b> scenario.</li>
+          <li>Click <b>Too small</b>, then <b>Train GD</b>. Watch the red ball.</li>
+          <li>Click <b>Just right</b>, then <b>Train GD</b>.</li>
+          <li>Click <b>Too large</b>, then <b>Train GD</b>.</li>
+          <li>Click <b>Run GA</b>. Compare the error and the number of evaluations.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Mission 2 (13 minutes)</h3>
+        <ol>
+          <li>Pick another scenario or <b>Your own scenario</b> (fill in the name, labels, and units).</li>
+          <li>Enter 6 to 10 data points, in the table or by clicking the chart.</li>
+          <li>Train GD with <b>Just right</b>.</li>
+          <li>Click <b>Run 5 times</b> for GA.</li>
+          <li>Try predicting 2 or 3 new x values.</li>
+          <li>Fill in your group number and a one-sentence conclusion on the <b>Result Card</b>.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Extra challenges</h3>
+        <ul>
+          <li>Add one outlier far from the pattern. How do GD and GA react?</li>
+          <li>Try population 6 and 5 generations. How far are you from the best answer?</li>
+          <li>Find the smallest learning rate that still gets the gap below 10% within 50 steps.</li>
+        </ul>
+        <p class="muted small">Data must be fictional and neutral. Do not use personal data or anyone's grades.</p>
+      </div>
+    </div>
     <div class="row misi-actions">
-      <button type="button" id="btnMisi1">Siapkan Misi 1</button>
-      <button type="button" id="btnPakaiPreset" title="Mengisi pengaturan yang disarankan, dan contoh data jika data belum cukup">Pakai preset</button>
-      <button type="button" id="btnReset">Reset</button>
+      <button type="button" id="btnMisi1" data-i18n="btnMisi1">Siapkan Misi 1</button>
+      <button type="button" id="btnPakaiPreset" data-i18n="btnPreset" data-i18n-attr="title:btnPresetTitle" title="Mengisi pengaturan yang disarankan, dan contoh data jika data belum cukup">Pakai preset</button>
+      <button type="button" id="btnReset" data-i18n="btnReset">Reset</button>
       <span class="muted small" id="draftNote"></span>
     </div>
   </details>
@@ -76,89 +111,89 @@
   <div class="praktik-grid">
     <!-- Data dan Model -->
     <section class="card" id="card-data" aria-labelledby="h-data">
-      <h2 id="h-data">Data dan Model</h2>
+      <h2 id="h-data" data-i18n="hData">Data dan Model</h2>
       <div class="row">
-        <label for="scenarioSelect">Skenario</label>
+        <label for="scenarioSelect" data-i18n="scenario">Skenario</label>
         <select id="scenarioSelect"></select>
       </div>
       <div class="fields" id="customFields" hidden>
-        <div class="field"><label for="cName">Nama skenario</label><input type="text" id="cName" maxlength="60"></div>
-        <div class="field"><label for="cXLabel">Label x</label><input type="text" id="cXLabel" maxlength="30"></div>
-        <div class="field"><label for="cXUnit">Satuan x</label><input type="text" id="cXUnit" maxlength="15"></div>
-        <div class="field"><label for="cYLabel">Label y</label><input type="text" id="cYLabel" maxlength="30"></div>
-        <div class="field"><label for="cYUnit">Satuan y</label><input type="text" id="cYUnit" maxlength="15"></div>
+        <div class="field"><label for="cName" data-i18n="cName">Nama skenario</label><input type="text" id="cName" maxlength="60" data-i18n-attr="placeholder:cNamePh"></div>
+        <div class="field"><label for="cXLabel" data-i18n="cXLabel">Label x</label><input type="text" id="cXLabel" maxlength="30" data-i18n-attr="placeholder:cXLabelPh"></div>
+        <div class="field"><label for="cXUnit" data-i18n="cXUnit">Satuan x</label><input type="text" id="cXUnit" maxlength="15" data-i18n-attr="placeholder:cXUnitPh"></div>
+        <div class="field"><label for="cYLabel" data-i18n="cYLabel">Label y</label><input type="text" id="cYLabel" maxlength="30" data-i18n-attr="placeholder:cYLabelPh"></div>
+        <div class="field"><label for="cYUnit" data-i18n="cYUnit">Satuan y</label><input type="text" id="cYUnit" maxlength="15" data-i18n-attr="placeholder:cYUnitPh"></div>
       </div>
       <div class="canvas-wrap" style="margin-top:8px">
-        <canvas id="plot" aria-label="Grafik data dan garis model. Klik untuk menambah titik."></canvas>
+        <canvas id="plot" aria-label="Grafik data dan garis model. Klik untuk menambah titik." data-i18n-attr="aria-label:plotAria"></canvas>
       </div>
       <div class="legend">
-        <span><i class="sw sw-data"></i>data</span>
-        <span><i class="sw sw-gd"></i>garis GD</span>
-        <span><i class="sw sw-ga"></i>garis GA</span>
-        <span><i class="sw sw-best"></i>jawaban terbaik</span>
-        <span><i class="sw sw-try"></i>garis coba-coba</span>
+        <span><i class="sw sw-data"></i><span data-i18n="lgData">data</span></span>
+        <span><i class="sw sw-gd"></i><span data-i18n="lgGdLine">garis GD</span></span>
+        <span><i class="sw sw-ga"></i><span data-i18n="lgGaLine">garis GA</span></span>
+        <span><i class="sw sw-best"></i><span data-i18n="lgBest">jawaban terbaik</span></span>
+        <span><i class="sw sw-try"></i><span data-i18n="lgTry">garis coba-coba</span></span>
       </div>
-      <p class="muted small">Klik grafik untuk menambah titik data. Model: y = w·x + b.</p>
+      <p class="muted small" data-i18n="plotHint">Klik grafik untuk menambah titik data. Model: y = w·x + b.</p>
     </section>
 
     <!-- Lanskap Error -->
     <div id="land-wrap">
     <section class="card" id="card-land" aria-labelledby="h-land">
-      <h2 id="h-land">Lanskap Error</h2>
+      <h2 id="h-land" data-i18n="hLand">Lanskap Error</h2>
       <div class="canvas-wrap">
-        <canvas id="heat" aria-label="Peta error untuk setiap pasangan w dan b"></canvas>
+        <canvas id="heat" aria-label="Peta error untuk setiap pasangan w dan b" data-i18n-attr="aria-label:heatAria"></canvas>
       </div>
       <div class="legend">
-        <span>error kecil</span><i class="colorbar"></i><span>error besar</span>
+        <span data-i18n="lgSmall">error kecil</span><i class="colorbar"></i><span data-i18n="lgLarge">error besar</span>
       </div>
       <div class="legend">
-        <span><i class="sw sw-start"></i>titik awal GD</span>
-        <span><i class="sw sw-gd"></i>bola GD</span>
-        <span><i class="sw sw-ga"></i>populasi GA</span>
-        <span><i class="sw sw-best"></i>jawaban terbaik</span>
+        <span><i class="sw sw-start"></i><span data-i18n="lgStart">titik awal GD</span></span>
+        <span><i class="sw sw-gd"></i><span data-i18n="lgBall">bola GD</span></span>
+        <span><i class="sw sw-ga"></i><span data-i18n="lgPop">populasi GA</span></span>
+        <span><i class="sw sw-best"></i><span data-i18n="lgBest">jawaban terbaik</span></span>
       </div>
-      <p class="muted small" id="heatReadout">Arahkan atau klik peta untuk mencoba satu pasangan (w, b).</p>
-      <canvas id="lossChart" aria-label="Grafik error terhadap iterasi"></canvas>
+      <p class="muted small" id="heatReadout" data-i18n="heatHint">Arahkan atau klik peta untuk mencoba satu pasangan (w, b).</p>
+      <canvas id="lossChart" aria-label="Grafik error terhadap iterasi" data-i18n-attr="aria-label:lossAria"></canvas>
       <p class="muted small" id="optInfo"></p>
     </section>
     </div>
 
     <!-- Latih Model -->
     <section class="card" id="card-train" aria-labelledby="h-train">
-      <h2 id="h-train">Latih Model</h2>
+      <h2 id="h-train" data-i18n="hTrain">Latih Model</h2>
       <div class="method" id="gdBox">
-        <h3><span class="dot" style="background:var(--gd)"></span>Cara 1: Gradient Descent (GD)</h3>
-        <div class="row" role="group" aria-label="Preset learning rate">
-          <button type="button" class="chip" data-lr="kecil">Terlalu kecil</button>
-          <button type="button" class="chip" data-lr="pas">Pas</button>
-          <button type="button" class="chip" data-lr="besar">Terlalu besar</button>
+        <h3><span class="dot" style="background:var(--gd)"></span><span data-i18n="gdTitle">Cara 1: Gradient Descent (GD)</span></h3>
+        <div class="row" role="group" aria-label="Preset learning rate" data-i18n-attr="aria-label:lrGroupAria">
+          <button type="button" class="chip" data-lr="kecil" data-i18n="lrKecil">Terlalu kecil</button>
+          <button type="button" class="chip" data-lr="pas" data-i18n="lrPas">Pas</button>
+          <button type="button" class="chip" data-lr="besar" data-i18n="lrBesar">Terlalu besar</button>
         </div>
-        <div class="ctrl"><label for="lrSlider">Learning rate</label><input type="range" id="lrSlider" min="-3" max="0.5" step="0.01"><output id="lrOut"></output></div>
-        <div class="ctrl"><label for="stepsSlider">Jumlah langkah</label><input type="range" id="stepsSlider" min="10" max="300" step="10"><output id="stepsOut"></output></div>
-        <div class="ctrl"><label for="speedSlider">Kecepatan animasi</label><input type="range" id="speedSlider" min="1" max="5" step="1"><output id="speedOut"></output></div>
+        <div class="ctrl"><label for="lrSlider" data-i18n="learningRate">Learning rate</label><input type="range" id="lrSlider" min="-3" max="0.5" step="0.01"><output id="lrOut"></output></div>
+        <div class="ctrl"><label for="stepsSlider" data-i18n="steps">Jumlah langkah</label><input type="range" id="stepsSlider" min="10" max="300" step="10"><output id="stepsOut"></output></div>
+        <div class="ctrl"><label for="speedSlider" data-i18n="speed">Kecepatan animasi</label><input type="range" id="speedSlider" min="1" max="5" step="1"><output id="speedOut"></output></div>
         <div class="row">
-          <button type="button" class="btn-primary" id="btnGD">Latih GD</button>
-          <button type="button" id="btnGDFinish">Langsung selesai</button>
+          <button type="button" class="btn-primary" id="btnGD" data-i18n="btnGD">Latih GD</button>
+          <button type="button" id="btnGDFinish" data-i18n="btnFinish">Langsung selesai</button>
         </div>
         <div class="msg-warn" id="gdWarn" role="status"></div>
         <div class="result" id="gdResult" aria-live="polite"></div>
       </div>
       <div class="method" id="gaBox">
-        <h3><span class="dot" style="background:var(--ga)"></span>Cara 2: Algoritma Genetika (GA)</h3>
-        <div class="ctrl"><label for="popSlider">Ukuran populasi</label><input type="range" id="popSlider" min="6" max="60" step="1"><output id="popOut"></output></div>
-        <div class="ctrl"><label for="genSlider">Jumlah generasi</label><input type="range" id="genSlider" min="5" max="80" step="1"><output id="genOut"></output></div>
-        <div class="ctrl"><label for="mutSlider">Laju mutasi</label><input type="range" id="mutSlider" min="0" max="1" step="0.01"><output id="mutOut"></output></div>
-        <div class="row" role="group" aria-label="Preset laju mutasi">
-          <button type="button" class="chip" data-mut="0.05">Rendah</button>
-          <button type="button" class="chip" data-mut="0.3">Sedang</button>
-          <button type="button" class="chip" data-mut="0.8">Tinggi</button>
-          <label for="seedInput" style="margin-left:auto">Seed</label>
+        <h3><span class="dot" style="background:var(--ga)"></span><span data-i18n="gaTitle">Cara 2: Algoritma Genetika (GA)</span></h3>
+        <div class="ctrl"><label for="popSlider" data-i18n="pop">Ukuran populasi</label><input type="range" id="popSlider" min="6" max="60" step="1"><output id="popOut"></output></div>
+        <div class="ctrl"><label for="genSlider" data-i18n="gens">Jumlah generasi</label><input type="range" id="genSlider" min="5" max="80" step="1"><output id="genOut"></output></div>
+        <div class="ctrl"><label for="mutSlider" data-i18n="mutation">Laju mutasi</label><input type="range" id="mutSlider" min="0" max="1" step="0.01"><output id="mutOut"></output></div>
+        <div class="row" role="group" aria-label="Preset laju mutasi" data-i18n-attr="aria-label:mutGroupAria">
+          <button type="button" class="chip" data-mut="0.05" data-i18n="mutLow">Rendah</button>
+          <button type="button" class="chip" data-mut="0.3" data-i18n="mutMid">Sedang</button>
+          <button type="button" class="chip" data-mut="0.8" data-i18n="mutHigh">Tinggi</button>
+          <label for="seedInput" style="margin-left:auto" data-i18n="seed">Seed</label>
           <input type="number" id="seedInput" min="0" max="999999" step="1" style="width:6.5em">
         </div>
         <div class="row">
-          <button type="button" class="btn-primary" id="btnGA">Jalankan GA</button>
-          <button type="button" id="btnGAFinish">Langsung selesai</button>
-          <button type="button" class="btn-gold" id="btnGA5">Jalankan 5 kali</button>
+          <button type="button" class="btn-primary" id="btnGA" data-i18n="btnGA">Jalankan GA</button>
+          <button type="button" id="btnGAFinish" data-i18n="btnFinish">Langsung selesai</button>
+          <button type="button" class="btn-gold" id="btnGA5" data-i18n="btnGA5">Jalankan 5 kali</button>
         </div>
         <div class="result" id="gaResult" aria-live="polite"></div>
         <div id="gaManyBox"></div>
@@ -168,15 +203,15 @@
 
     <!-- Tabel data -->
     <section class="card" id="card-table" aria-labelledby="h-table">
-      <h2 id="h-table">Tabel Data</h2>
+      <h2 id="h-table" data-i18n="hTable">Tabel Data</h2>
       <div class="table-scroll">
         <table id="dataTable">
-          <thead><tr><th>No</th><th id="thX">x</th><th id="thY">y</th><th></th></tr></thead>
+          <thead><tr><th data-i18n="thNo">No</th><th id="thX">x</th><th id="thY">y</th><th></th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
       <div class="row" style="margin-top:8px">
-        <button type="button" id="btnAddRow">Tambah baris</button>
+        <button type="button" id="btnAddRow" data-i18n="addRow">Tambah baris</button>
         <span class="muted small" id="dataCount"></span>
       </div>
       <div class="msg-warn" id="dataWarn"></div>
@@ -184,40 +219,40 @@
 
     <!-- Prediksi -->
     <section class="card" id="card-pred" aria-labelledby="h-pred">
-      <h2 id="h-pred">Prediksi</h2>
+      <h2 id="h-pred" data-i18n="hPred">Prediksi</h2>
       <form id="predForm" class="row" autocomplete="off">
         <label for="predInput" id="predLabel">Nilai x baru</label>
-        <input type="text" id="predInput" inputmode="decimal" style="width:8em" placeholder="contoh: 7">
-        <label for="predModel">Model</label>
+        <input type="text" id="predInput" inputmode="decimal" style="width:8em" placeholder="contoh: 7" data-i18n-attr="placeholder:predPh">
+        <label for="predModel" data-i18n="predModel">Model</label>
         <select id="predModel">
-          <option value="both">Keduanya</option>
-          <option value="gd">GD</option>
-          <option value="ga">GA terbaik</option>
+          <option value="both" data-i18n="predBoth">Keduanya</option>
+          <option value="gd" data-i18n="predGd">GD</option>
+          <option value="ga" data-i18n="predGa">GA terbaik</option>
         </select>
-        <button type="submit" class="btn-primary" id="btnPredict">Prediksi</button>
+        <button type="submit" class="btn-primary" id="btnPredict" data-i18n="btnPredict">Prediksi</button>
       </form>
       <div class="pred-out" id="predOut" aria-live="polite"></div>
-      <p class="muted small">Tiga prediksi terakhir otomatis masuk ke Kartu Hasil.</p>
+      <p class="muted small" data-i18n="predHint">Tiga prediksi terakhir otomatis masuk ke Kartu Hasil.</p>
     </section>
 
     <!-- Kartu Hasil -->
     <section class="card" id="card-kartu" aria-labelledby="h-kartu">
-      <h2 id="h-kartu">Kartu Hasil</h2>
+      <h2 id="h-kartu" data-i18n="hKartu">Kartu Hasil</h2>
       <div class="kartu-layout">
         <div>
           <div class="field">
-            <label for="groupInput">Nomor kelompok (tanpa nama)</label>
+            <label for="groupInput" data-i18n="groupLabel">Nomor kelompok (tanpa nama)</label>
             <input type="text" id="groupInput" maxlength="4" inputmode="numeric" style="width:6em">
           </div>
           <div class="field" style="margin-top:8px">
-            <label for="conclusionInput">Satu kalimat kesimpulan kelompok</label>
-            <textarea id="conclusionInput" rows="3" maxlength="240" placeholder="contoh: GD dengan learning rate pas paling cepat, GA tetap dekat walau tanpa kemiringan."></textarea>
+            <label for="conclusionInput" data-i18n="conclLabel">Satu kalimat kesimpulan kelompok</label>
+            <textarea id="conclusionInput" rows="3" maxlength="240" data-i18n-attr="placeholder:conclPh" placeholder="contoh: GD dengan learning rate pas paling cepat, GA tetap dekat walau tanpa kemiringan."></textarea>
           </div>
           <div class="row" style="margin-top:8px">
-            <button type="button" class="btn-primary" id="btnCopy">Salin ringkasan</button>
-            <button type="button" id="btnPresent2" aria-pressed="false">Mode Presentasi</button>
+            <button type="button" class="btn-primary" id="btnCopy" data-i18n="btnCopy">Salin ringkasan</button>
+            <button type="button" id="btnPresent2" aria-pressed="false" data-i18n="present">Mode Presentasi</button>
           </div>
-          <textarea id="copyFallback" rows="6" readonly hidden aria-label="Ringkasan untuk disalin manual"></textarea>
+          <textarea id="copyFallback" rows="6" readonly hidden aria-label="Ringkasan untuk disalin manual" data-i18n-attr="aria-label:copyAria"></textarea>
         </div>
         <div class="hasil" id="hasilCard"></div>
       </div>
@@ -227,6 +262,7 @@
 
 <!-- ===================== PANDUAN ===================== -->
 <section class="tabpanel doc" id="panel-panduan" role="tabpanel" aria-labelledby="tab-panduan" hidden>
+  <div data-lang="id">
   <div class="card">
     <h2>Panduan Peserta: Prediktor, Dua Cara Belajar</h2>
     <p><b>Apa yang kita lakukan hari ini?</b> Kita membuat alat prediksi sederhana. Modelnya garis lurus <b>y = w·x + b</b>. Mesin dikatakan "belajar" ketika ia mencari pasangan <b>w</b> (kemiringan) dan <b>b</b> (titik potong) yang membuat <b>error</b> paling kecil. Kita melatihnya dengan dua cara, lalu membandingkan hasilnya.</p>
@@ -234,7 +270,7 @@
       <li><b>Cara 1, Gradient Descent (GD):</b> mengikuti kemiringan error menuju lembah. Cepat, tapi sensitif terhadap learning rate.</li>
       <li><b>Cara 2, Algoritma Genetika (GA):</b> sekumpulan tebakan diseleksi, dicampur, dan dimutasi dari generasi ke generasi. Tidak butuh kemiringan. Hasilnya bisa sedikit berbeda setiap kali dijalankan.</li>
     </ul>
-    <p>Tidak perlu menulis kode. Semua berjalan di browser, juga tanpa internet setelah halaman pernah dibuka.</p>
+    <p>Tidak perlu menulis kode. Semua berjalan di browser, juga tanpa internet setelah halaman pernah dibuka. Tombol <b>EN</b> di kanan atas mengganti tampilan ke bahasa Inggris.</p>
   </div>
   <div class="card">
     <h3>Misi 1 (8 menit): kenali dua cara</h3>
@@ -296,10 +332,84 @@
       <p class="muted">Pindai untuk membuka alat ini di perangkat lain.<br>Alat ini tidak mengumpulkan data apa pun. Isian hanya tersimpan di browser kalian sendiri.</p>
     </div>
   </div>
+  </div>
+
+  <div data-lang="en">
+  <div class="card">
+    <h2>Participant Guide: Prediktor, Two Ways to Learn</h2>
+    <p><b>What are we doing today?</b> We are building a simple prediction tool. The model is a straight line <b>y = w·x + b</b>. We say a machine "learns" when it searches for the pair <b>w</b> (slope) and <b>b</b> (intercept) that makes the <b>error</b> as small as possible. We train it in two ways and compare the results.</p>
+    <ul>
+      <li><b>Method 1, Gradient Descent (GD):</b> follows the slope of the error down into the valley. Fast, but sensitive to the learning rate.</li>
+      <li><b>Method 2, Genetic Algorithm (GA):</b> a set of guesses is selected, mixed, and mutated from generation to generation. It needs no slope. The result can differ slightly every time it runs.</li>
+    </ul>
+    <p>No coding needed. Everything runs in the browser, even without internet once the page has been opened. The <b>ID</b> button at the top right switches the display back to Bahasa Indonesia.</p>
+  </div>
+  <div class="card">
+    <h3>Mission 1 (8 minutes): meet the two methods</h3>
+    <ol>
+      <li>On the <b>Practice</b> tab, use the <b>Distance and travel time</b> scenario (or click <b>Set up Mission 1</b>).</li>
+      <li>Click <b>Too small</b>, then <b>Train GD</b>. The red ball crawls slowly.</li>
+      <li>Click <b>Just right</b>, then <b>Train GD</b>. The ball drops into the valley and approaches the star.</li>
+      <li>Click <b>Too large</b>, then <b>Train GD</b>. The ball jumps further and further away and the error grows.</li>
+      <li>Click <b>Run GA</b>. The teal dots gather toward the star. Compare its number of evaluations with GD.</li>
+    </ol>
+    <h3>Mission 2 (13 minutes): your group's Predictor</h3>
+    <ol>
+      <li>Pick another scenario or <b>Your own scenario</b>. Fill in the scenario name, and the labels and units for x and y.</li>
+      <li>Enter 6 to 10 fictional data points in the table, or click the chart to add points.</li>
+      <li>Train GD with <b>Just right</b>.</li>
+      <li>Click <b>Run 5 times</b> for GA. Look at the best, worst, and average.</li>
+      <li>In the <b>Prediction</b> box, try 2 or 3 new x values.</li>
+      <li>Fill in your group number and a one-sentence conclusion on the <b>Result Card</b>, then turn on <b>Presentation Mode</b> if you will present.</li>
+    </ol>
+    <p class="muted">Stuck? Click <b>Use preset</b>. Want to start over? Click <b>Reset</b>.</p>
+  </div>
+  <div class="card">
+    <h3>What each control means</h3>
+    <dl>
+      <dt>Error (MSE)</dt><dd>The average of the squared differences between the line's guesses and the real data. Smaller means a better fit. Its unit is the y unit squared.</dd>
+      <dt>Error Landscape</dt><dd>A map of every (w, b) pair. Light colors mean small error, dark colors mean large error. The gold star is the best answer, which can be computed directly because the model is small.</dd>
+      <dt>Learning rate</dt><dd>The step size of GD. Too small makes it slow; too large makes the ball jump and the error grow.</dd>
+      <dt>Number of steps</dt><dd>How many steps GD takes.</dd>
+      <dt>Population size</dt><dd>How many (w, b) guesses are in one GA generation.</dd>
+      <dt>Generations</dt><dd>How many times the population is renewed.</dd>
+      <dt>Mutation rate</dt><dd>The chance that each child is nudged a little at random. Low makes the population converge quickly; high spreads the search out more.</dd>
+      <dt>Seed</dt><dd>The starting number for the random generator. The same seed always gives the same result, so results can be repeated.</dd>
+      <dt>Evaluations</dt><dd>How many times the error is computed. GD: once per step. GA: population size times generations. Used for a fair comparison.</dd>
+    </dl>
+  </div>
+  <div class="card">
+    <h3>How to read the Result Card</h3>
+    <ul>
+      <li><b>GD:</b> the learning rate and step settings, the final error, and its gap to the best answer.</li>
+      <li><b>GA 5 runs:</b> the best, worst, and average error from five different seeds. The percentage gap shows how far each is from the best answer.</li>
+      <li><b>Best answer:</b> the error from the exact formula, used as the answer key.</li>
+      <li><b>Predictions:</b> examples of using the model for new x values.</li>
+      <li><b>Conclusion:</b> one sentence from your group.</li>
+    </ul>
+  </div>
+  <div class="card honesty">
+    <h3>An honest note about metaheuristics</h3>
+    <p>Genetic algorithms and other metaheuristics do not guarantee the best answer. They give a good-enough answer in a reasonable time. That is why we run them several times and report the best, worst, and average results as they are. For a straight line, the best answer can be computed with a formula. Metaheuristics are useful for problems that have no slope, such as ordering the stops of a travel route.</p>
+  </div>
+  <div class="card">
+    <h3>Further questions and official channels</h3>
+    <p>Questions that were not answered can be brought to the presenters after the session or sent through Computing Laboratory's official channels:</p>
+    <ul>
+      <li>Instagram: <a href="https://www.instagram.com/computing.lab/" target="_blank" rel="noopener">@computing.lab</a></li>
+      <li>Website: <a href="https://computinglab.tech" target="_blank" rel="noopener">computinglab.tech</a></li>
+    </ul>
+    <div class="qr-box">
+      <img src="qr.svg" alt="QR code that opens this tool" width="150" height="150">
+      <p class="muted">Scan to open this tool on another device.<br>This tool collects no data at all. Your input is stored only in your own browser.</p>
+    </div>
+  </div>
+  </div>
 </section>
 
 <!-- ===================== PSEUDOCODE ===================== -->
 <section class="tabpanel doc" id="panel-pseudocode" role="tabpanel" aria-labelledby="tab-pseudocode" hidden>
+  <div data-lang="id">
   <div class="card">
     <h2>Pseudocode</h2>
     <p class="muted">Ditulis dengan gaya umum supaya mudah dibaca. Notasinya tidak mengikuti notasi resmi mata kuliah tertentu.</p>
@@ -353,10 +463,68 @@ ulangi sebanyak jumlah_generasi kali
 kembalikan individu dengan error terkecil</pre>
     <p><b>Kapan dipakai:</b> saat kemiringan tidak ada atau sulit dihitung, misalnya menyusun urutan rute atau jadwal.</p>
   </div>
+  </div>
+
+  <div data-lang="en">
+  <div class="card">
+    <h2>Pseudocode</h2>
+    <p class="muted">Written in a generic style so it is easy to read. The notation does not follow any particular course's official notation.</p>
+    <h3>Computing the error</h3>
+<pre>function error(w, b)
+    total ← 0
+    for each point (x, y) in data
+        guess ← w * x + b
+        total ← total + (guess - y)²
+    return total / data_count</pre>
+  </div>
+  <div class="card">
+    <h3>1. Brute force over a (w, b) grid</h3>
+<pre>best ← infinity
+for w from -2 to 4, step 0.1
+    for b from -2 to 4, step 0.1
+        e ← error(w, b)
+        if e &lt; best then
+            best ← e
+            save (w, b)
+return the saved (w, b)</pre>
+    <p><b>When to use it:</b> when there are only a few possible answers and we want to check all of them.</p>
+  </div>
+  <div class="card">
+    <h3>2. Gradient Descent</h3>
+<pre>w ← w_start
+b ← b_start
+repeat number_of_steps times
+    gw ← slope of the error with respect to w     // 2 × average((w*x + b - y) * x)
+    gb ← slope of the error with respect to b     // 2 × average(w*x + b - y)
+    w ← w - learning_rate * gw
+    b ← b - learning_rate * gb
+    if error(w, b) grows out of control then stop
+return (w, b)</pre>
+    <p><b>When to use it:</b> when the error has a slope we can compute, as when training a machine learning model.</p>
+  </div>
+  <div class="card">
+    <h3>3. Genetic Algorithm</h3>
+<pre>population ← N random (w, b) pairs
+repeat number_of_generations times
+    compute the error of every individual
+    next ← [individual with the smallest error]     // elitism
+    while size(next) &lt; N
+        parent_1 ← tournament(population)            // pick 3 at random, keep the one with the smallest error
+        parent_2 ← tournament(population)
+        child ← blend(parent_1, parent_2)            // crossover: a random value around both parents
+        with probability mutation_rate:
+            nudge the child a little at random        // mutation
+        add child to next
+    population ← next
+return the individual with the smallest error</pre>
+    <p><b>When to use it:</b> when there is no slope or it is hard to compute, for example ordering a route or a schedule.</p>
+  </div>
+  </div>
 </section>
 
 <!-- ===================== TENTANG LAB ===================== -->
 <section class="tabpanel doc" id="panel-tentang" role="tabpanel" aria-labelledby="tab-tentang" hidden>
+  <div data-lang="id">
   <div class="card">
     <h2>Computing Laboratory</h2>
     <p>Laboratorium di Fakultas Informatika, Telkom University.</p>
@@ -383,13 +551,47 @@ kembalikan individu dengan error terkecil</pre>
       <li>Situs: <a href="https://computinglab.tech" target="_blank" rel="noopener">computinglab.tech</a></li>
     </ul>
   </div>
+  </div>
+
+  <div data-lang="en">
+  <div class="card">
+    <h2>Computing Laboratory</h2>
+    <p>A laboratory in the Faculty of Informatics, Telkom University.</p>
+    <p><b>Focus:</b> Computational Intelligence and Optimization, with competitive programming as the foundation of algorithmic thinking.</p>
+    <p>At Computing Laboratory, learning is treated as optimization, like the gradient descent you tried today. The lab works on metaheuristics: genetic algorithms, particle swarm optimization, ant colony optimization, simulated annealing, and the Komodo Mlipir Algorithm developed at Telkom University. The lab also works on machine learning grounded in optimization, going beyond only calling libraries.</p>
+  </div>
+  <div class="card">
+    <h3>How it relates to the DSIS Expertise Group</h3>
+    <p>DSIS (Data Science and AI) is about processing data and building systems that can predict or make decisions. Almost every model is trained by searching for the best settings, and that is an optimization problem. Related career paths: Data Scientist, Machine Learning Engineer, and AI Engineer.</p>
+  </div>
+  <div class="card">
+    <h3>The lab's 2026 publication topics</h3>
+    <ul>
+      <li>Skin-tone bias in dermatology AI.</li>
+      <li>4-bit quantized small language models with CoT and PoT prompting.</li>
+      <li>Edge-deployable video-LLMs.</li>
+      <li>A hybrid bee colony algorithm for itinerary recommendation.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Official channels</h3>
+    <ul>
+      <li>Instagram: <a href="https://www.instagram.com/computing.lab/" target="_blank" rel="noopener">@computing.lab</a></li>
+      <li>Website: <a href="https://computinglab.tech" target="_blank" rel="noopener">computinglab.tech</a></li>
+    </ul>
+  </div>
+  </div>
 </section>
 </main>
 
-<footer>Prediktor oleh Computing Laboratory untuk FORTRAN 2026. Tidak ada data yang dikumpulkan; semua perhitungan terjadi di browser kalian.</footer>
+<footer>
+  <span data-lang="id">Prediktor oleh Computing Laboratory untuk FORTRAN 2026. Tidak ada data yang dikumpulkan; semua perhitungan terjadi di browser kalian.</span>
+  <span data-lang="en">Prediktor by Computing Laboratory for FORTRAN 2026. No data is collected; every calculation happens in your browser.</span>
+</footer>
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script src="core.js"></script>
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

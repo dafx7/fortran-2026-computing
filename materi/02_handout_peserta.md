@@ -11,7 +11,7 @@ Kita membuat alat prediksi sederhana. Modelnya garis lurus **y = w·x + b**. Mes
 - **Cara 1, Gradient Descent (GD):** mengikuti kemiringan error menuju lembah. Cepat, tapi sensitif terhadap learning rate.
 - **Cara 2, Algoritma Genetika (GA):** sekumpulan tebakan diseleksi, dicampur, dan dimutasi dari generasi ke generasi. Tidak butuh kemiringan. Hasilnya bisa sedikit berbeda setiap kali dijalankan.
 
-Tidak perlu menulis kode. Semua berjalan di browser, juga tanpa internet setelah halaman pernah dibuka.
+Tidak perlu menulis kode. Semua berjalan di browser, juga tanpa internet setelah halaman pernah dibuka. Tombol **EN** di kanan atas mengganti tampilan ke bahasa Inggris.
 
 ## Misi 1 (8 menit): kenali dua cara
 

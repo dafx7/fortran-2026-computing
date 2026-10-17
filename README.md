@@ -6,12 +6,13 @@ Materi dan alat praktik **Computing Laboratory** untuk sesi trial class FORTRAN 
 
 - Tanpa server, tanpa akun, tanpa API key, tanpa dependensi runtime, tanpa CDN atau web font.
 - Tetap jalan tanpa internet setelah dibuka sekali (service worker), dan bisa dibuka langsung dari flashdisk (`file://`).
+- Dwibahasa: Bahasa Indonesia sebagai bawaan, dengan tombol **EN** di kanan atas untuk bahasa Inggris. Tautan dengan `?lang=en` (contoh `https://alamat-alat/?lang=en`) langsung membuka versi Inggris. Pilihan bahasa diingat di browser.
 - Tidak mengumpulkan data apa pun. Draf isian hanya disimpan di `localStorage` browser peserta sendiri.
 
 ## Isi repositori
 
 ```
-site/        alat yang di-deploy (index.html, style.css, core.js, app.js, sw.js, manifest, ikon, qr.svg)
+site/        alat yang di-deploy (index.html, style.css, core.js, i18n.js, app.js, sw.js, manifest, ikon, qr.svg)
 materi/      naskah fasilitator, handout, prompt slide, naskah demo, rubrik, kartu kontingensi, checklist, requirement panitia
 materi/screenshots/  tangkapan layar demo sebagai cadangan
 tests/       unit test (node:test) dan e2e (Playwright)

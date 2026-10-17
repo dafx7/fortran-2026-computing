@@ -141,7 +141,7 @@ test('Tetap jalan tanpa internet setelah dibuka sekali (service worker)', async 
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   if (!(await page.evaluate(() => !!navigator.serviceWorker.controller))) await page.reload();
   expect(await page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
-  expect(await page.evaluate(async () => (await caches.keys()).includes('prediktor-v1'))).toBe(true);
+  expect(await page.evaluate(async () => (await caches.keys()).some((k) => /^prediktor-v\d+$/.test(k)))).toBe(true);
   await context.setOffline(true);
   await page.reload();
   await expect(page.locator('.brand-title')).toHaveText('Prediktor');
@@ -162,5 +162,42 @@ test('Bisa dibuka langsung dari file:// (cadangan USB)', async ({ page }) => {
   await expect(page.locator('#gaManyTable tbody tr')).toHaveCount(8);
   const hasSW = await page.evaluate(() => !!(navigator.serviceWorker && navigator.serviceWorker.controller));
   expect(hasSW).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test('Tombol bahasa: tampilan Inggris lengkap dan bisa kembali ke Indonesia', async ({ page }) => {
+  const errors = watchErrors(page);
+  await freshPage(page);
+  await page.click('#btnLang');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('#tab-praktik')).toHaveText('Practice');
+  await expect(page.locator('#btnGD')).toHaveText('Train GD');
+  await page.click('[data-lr="besar"]');
+  await page.click('#btnGDFinish');
+  await expect(page.locator('#gdWarn')).toHaveText('The error is growing; the steps are too big. Try a smaller learning rate.');
+  await page.click('[data-lr="pas"]');
+  await page.click('#btnGDFinish');
+  await expect(page.locator('#gdResult')).toContainText('Final error: 0.238 minutes²');
+  await page.click('#btnGA5');
+  await expect(page.locator('#gaManyTable')).toContainText('Average');
+  await page.fill('#predInput', '7');
+  await page.click('#btnPredict');
+  await expect(page.locator('#predOut')).toContainText('For distance 7 km, the estimated travel time is about 23 minutes.');
+  await expect(page.locator('#hasilCard')).toContainText('Genetic Algorithm, 5 runs');
+  await page.click('#tab-panduan');
+  await expect(page.locator('#panel-panduan')).toContainText('An honest note about metaheuristics');
+  await expect(page.getByText('Catatan kejujuran tentang metaheuristik')).toBeHidden();
+  await page.click('#tab-praktik');
+  // Pilihan bahasa tersimpan setelah muat ulang.
+  await page.waitForTimeout(400);
+  await page.reload();
+  await expect(page.locator('#btnGD')).toHaveText('Train GD');
+  await page.click('#btnLang');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'id');
+  await expect(page.locator('#btnGD')).toHaveText('Latih GD');
+  await expect(page.locator('body')).not.toContainText(/rekrutmen|pendaftaran|recruitment|registration/i);
+  // Tautan ?lang=en langsung membuka versi Inggris.
+  await page.goto('/?lang=en');
+  await expect(page.locator('#tab-tentang')).toHaveText('About the Lab');
   expect(errors).toEqual([]);
 });

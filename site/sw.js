@@ -1,7 +1,7 @@
 /* Service worker Prediktor: cache-first supaya alat tetap jalan tanpa internet.
    Ganti nomor versi setiap kali isi situs berubah. */
-var CACHE = 'prediktor-v1';
-var FILES = ['./', 'index.html', 'style.css', 'core.js', 'app.js', 'icon.svg', 'qr.svg', 'manifest.webmanifest'];
+var CACHE = 'prediktor-v2';
+var FILES = ['./', 'index.html', 'style.css', 'core.js', 'i18n.js', 'app.js', 'icon.svg', 'qr.svg', 'manifest.webmanifest'];
 
 self.addEventListener('install', function (event) {
   event.waitUntil(caches.open(CACHE).then(function (cache) { return cache.addAll(FILES); }).then(function () { return self.skipWaiting(); }));

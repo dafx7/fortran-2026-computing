@@ -173,3 +173,26 @@ test('validasi data', () => {
   assert.match(C.validate([{ x: 1, y: 2 }, { x: 1, y: 3 }]).message, /x yang berbeda/);
   assert.equal(C.validate([{ x: 1, y: 2 }, { x: 2, y: NaN }, { x: 3, y: 1 }]).ok, true);
 });
+
+test('bahasa Inggris: format angka, parse, dan kalimat prediksi', () => {
+  C.setLang('en');
+  try {
+    assert.equal(C.formatNumber(1234.5, 1), '1,234.5');
+    assert.equal(C.formatSmart(2.5), '2.5');
+    assert.equal(C.formatSmart(7), '7');
+    assert.equal(C.parseNumber('2.5'), 2.5);
+    assert.equal(C.parseNumber('2,5'), 2.5);
+    assert.equal(C.parseNumber('1,234.5'), 1234.5);
+    const sc = C.localScenario(C.SCENARIOS[0]);
+    assert.equal(sc.name, 'Distance and travel time');
+    const r = C.predictionSentence(sc, { w: 3, b: 0 }, '7', { xMin: 1, xMax: 10 });
+    assert.equal(r.text, 'For distance 7 km, the estimated travel time is about 21 minutes.');
+    assert.match(C.predictionSentence(sc, { w: 3, b: 0 }, '25', { xMin: 1, xMax: 10 }).notes[0], /outside the data range \(1 to 10\)/);
+    assert.match(C.predictionSentence(sc, { w: 1, b: 0 }, 'seven', null).text, /cannot be read/);
+    assert.match(C.validate([]).message, /At least 2/);
+  } finally {
+    C.setLang('id');
+  }
+  assert.equal(C.formatNumber(1234.5, 1), '1.234,5');
+  assert.equal(C.localScenario(C.SCENARIOS[0]).name, 'Jarak dan waktu tempuh');
+});
