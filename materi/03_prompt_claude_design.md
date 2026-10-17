@@ -50,17 +50,24 @@ Buatkan slide deck presentasi 16:9 berisi **16 slide** (tidak lebih) untuk sesi 
   - Aktivitas: [KONFIRMASI: aktivitas rutin lab]
 - Catatan pembicara: Belajar dipandang sebagai optimasi. Lab mendalami machine learning yang berpijak pada optimasi supaya tidak berhenti pada memanggil library.
 
-### Slide 5. Lab dan DSIS (menit 8 sampai 11)
-- Judul: **Lab kami dan KK DSIS**
-- Isi: diagram dua lingkaran beririsan. Kiri "DSIS: Data Science and AI, mengolah data menjadi prediksi dan keputusan". Kanan "Computing Lab: Computational Intelligence dan optimasi". Irisan: "Melatih model = mencari pengaturan terbaik".
+### Slide 5. Lab, DSIS, dan karier (menit 8 sampai 13)
+- Judul: **Lab kami, DSIS, dan arah karier**
+- Kiri: diagram dua lingkaran beririsan. Kiri "DSIS: Data Science and AI, mengolah data menjadi prediksi dan keputusan". Kanan "Computing Lab: Computational Intelligence dan optimasi". Irisan: "Melatih model = mencari pengaturan terbaik".
+- Kanan, tiga kartu peran: Data Scientist (menggali pola dari data) · Machine Learning Engineer (membangun dan melatih model) · AI Engineer (merancang sistem cerdas untuk masalah nyata)
 - Baris bawah: Teknologi: [KONFIRMASI: tumpukan teknologi lab]
-- Catatan pembicara: Hampir setiap model machine learning dilatih dengan optimasi. Di situlah lab kami bekerja.
+- Catatan pembicara: Hampir setiap model machine learning dilatih dengan optimasi. Di situlah lab kami bekerja. Ketiga peran butuh pemahaman optimasi.
 
-### Slide 6. Karier dan riset lab 2026 (menit 11 sampai 15)
-- Judul: **Ke mana arahnya?**
-- Kolom kiri, tiga kartu peran: Data Scientist (menggali pola dari data) · Machine Learning Engineer (membangun dan melatih model) · AI Engineer (merancang sistem cerdas untuk masalah nyata)
-- Kolom kanan, "Topik publikasi lab 2026": bias warna kulit pada AI dermatologi · small language model 4-bit dengan prompting CoT dan PoT · video-LLM untuk perangkat edge · hybrid bee colony untuk rekomendasi perjalanan
-- Catatan pembicara: Ketiga peran butuh pemahaman optimasi. Topik bee colony akan dibahas lagi di slide 12.
+### Slide 6. Publikasi Ilmiah Terpilih 2026 (menit 13 sampai 15)
+- Judul: **Publikasi Ilmiah Terpilih 2026**
+- Isi: daftar bernomor, judul makalah tebal dan venue di bawahnya berwarna emas. Judul tetap dalam bahasa Inggris, persis:
+  1. Gradient-Free Token Eviction for Edge-Deployable Video-LLMs in Ecological Monitoring (TENCON 2026)
+  2. A Contrastive and Uncertainty-Aware Analytics Framework for Reliable Lung Disease Detection from Chest Imaging (Healthcare Analytics, Elsevier)
+  3. An Empirical Analysis of Skin-Tone Bias and the Limitations of Random Oversampling in Dermatology AI (ICoICT 2026)
+  4. Syntactic Centrality in Classical Arabic: A Social Network Analysis of the Quranic Dependency Treebank (ICoDSA 2026)
+  5. XHABC: Enhanced Hybrid Artificial Bee Colony Algorithm for Recommending the Personalized Multi-Day Mixed Destination Tour (Journal of Big Data, Springer Nature)
+- Butir 5 diberi penanda kecil "dibahas lagi di slide 12".
+- Gambar: foto dokumentasi konferensi lab di sisi kanan (lihat `09_prompt_claude_design_revisi.md`).
+- Catatan pembicara: Topiknya beragam, dari AI kesehatan sampai bee colony untuk rencana wisata. Benang merahnya sama: mencari solusi terbaik secara cerdas. Nomor lima dibahas lagi di slide 12.
 
 ### Slide 7. Bentuk kelompok (menit 15 sampai 18)
 - Judul: **Bentuk kelompok, maksimal 5 orang**

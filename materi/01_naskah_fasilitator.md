@@ -106,17 +106,17 @@ Perpindahan ronde 1 ke ronde 2 hanya 15 menit (lantai 3 ke lantai 2). Laptop pre
 - **Timekeeper:** Kode 2 jari di menit 10.
 - **Jika waktu mepet, potong ini:** Bagian teknologi dilewati.
 
-### Menit 11-14: Karier dan contoh publikasi lab 2026
+### Menit 11-14: Karier dan publikasi ilmiah terpilih 2026
 - **Lead berkata:**
   - "Tiga peran yang dekat dengan DSIS: Data Scientist, Machine Learning Engineer, dan AI Engineer."
   - "Data Scientist menggali pola dari data dan menjelaskannya untuk pengambilan keputusan. Machine Learning Engineer membangun dan melatih model supaya bisa dipakai dengan andal. AI Engineer merancang sistem cerdas yang memakai model itu untuk menyelesaikan masalah nyata."
   - "Ketiganya butuh satu kemampuan yang sama: memahami bagaimana model menjadi lebih baik, yaitu optimasi."
-  - "Beberapa topik riset yang dipublikasikan lab tahun 2026: bias warna kulit pada AI dermatologi, small language model terkuantisasi 4-bit dengan teknik prompting CoT dan PoT, video-LLM yang bisa berjalan di perangkat edge, dan algoritma hybrid bee colony untuk rekomendasi rencana perjalanan."
-  - "Yang terakhir nanti akan kita singgung lagi, karena itu contoh masalah yang tidak bisa diselesaikan dengan cara biasa."
-- **Layar:** Slide 6 (Karier dan riset lab 2026).
+  - (Pindah ke slide 6) "Ini lima publikasi ilmiah terpilih lab tahun 2026. Ada token eviction tanpa gradien untuk video-LLM di perangkat edge pada pemantauan ekologi (TENCON), deteksi penyakit paru dari citra dada yang sadar ketidakpastian (Healthcare Analytics, Elsevier), analisis bias warna kulit pada AI dermatologi (ICoICT), analisis jaringan sintaksis bahasa Arab klasik pada treebank Al-Quran (ICoDSA), dan XHABC, algoritma hybrid bee colony untuk rekomendasi tur wisata beberapa hari (Journal of Big Data, Springer Nature)."
+  - "Benang merahnya sama: mencari solusi terbaik secara cerdas. Yang terakhir nanti akan kita singgung lagi, karena itu contoh masalah yang tidak bisa diselesaikan dengan cara biasa."
+- **Layar:** Slide 5 (karier) saat membahas tiga peran, lalu slide 6 (Publikasi Ilmiah Terpilih 2026).
 - **Fasilitator lantai:** Siap di depan barisan pertama untuk memulai hitungan kelompok.
 - **Timekeeper:** Kode kepalan di menit 14:00.
-- **Jika waktu mepet, potong ini:** Sebut tiga peran tanpa penjelasan masing-masing. Sebut dua topik riset saja (bias AI dermatologi dan bee colony).
+- **Jika waktu mepet, potong ini:** Sebut tiga peran tanpa penjelasan masing-masing. Tunjuk slide 6 dan sebut dua publikasi saja (bias warna kulit pada AI dermatologi dan XHABC bee colony).
 
 > Catatan: jangan menyebut pendaftaran atau rekrutmen anggota lab. Jika ditanya, jawab: "Informasi resmi selalu ada di Instagram @computing.lab dan computinglab.tech."
 
