@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A2540">
+<meta name="description" content="Prediktor: alat praktik Dua Cara Belajar dari Computing Laboratory untuk FORTRAN 2026.">
+<title>Prediktor: Dua Cara Belajar</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icon.svg" alt="" width="34" height="34">
+    <div style="min-width:0">
+      <div class="brand-title">Prediktor</div>
+      <div class="brand-sub">Dua Cara Belajar · Computing Laboratory · FORTRAN 2026</div>
+    </div>
+  </div>
+  <button type="button" class="btn-ghost" id="btnPresent" aria-pressed="false">Mode Presentasi</button>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Bagian alat">
+  <button class="tab" role="tab" id="tab-praktik" aria-controls="panel-praktik" aria-selected="true">Praktik</button>
+  <button class="tab" role="tab" id="tab-panduan" aria-controls="panel-panduan" aria-selected="false">Panduan</button>
+  <button class="tab" role="tab" id="tab-pseudocode" aria-controls="panel-pseudocode" aria-selected="false">Pseudocode</button>
+  <button class="tab" role="tab" id="tab-tentang" aria-controls="panel-tentang" aria-selected="false">Tentang Lab</button>
+</nav>
+
+<main>
+<!-- ===================== PRAKTIK ===================== -->
+<section class="tabpanel" id="panel-praktik" role="tabpanel" aria-labelledby="tab-praktik">
+  <details class="misi" id="misiPanel" open>
+    <summary>Misi hari ini: buat Prediktor kelompok kalian</summary>
+    <div class="misi-grid">
+      <div>
+        <h3>Misi 1 (8 menit)</h3>
+        <ol>
+          <li>Pakai skenario <b>Jarak dan waktu tempuh</b>.</li>
+          <li>Klik <b>Terlalu kecil</b>, lalu <b>Latih GD</b>. Amati bola merah.</li>
+          <li>Klik <b>Pas</b>, lalu <b>Latih GD</b>.</li>
+          <li>Klik <b>Terlalu besar</b>, lalu <b>Latih GD</b>.</li>
+          <li>Klik <b>Jalankan GA</b>. Bandingkan error dan jumlah evaluasi.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Misi 2 (13 menit)</h3>
+        <ol>
+          <li>Pilih skenario lain atau <b>Skenario sendiri</b> (isi nama, label, dan satuan).</li>
+          <li>Isi 6 sampai 10 titik data. Boleh lewat tabel atau klik grafik.</li>
+          <li>Latih GD dengan <b>Pas</b>.</li>
+          <li>Klik <b>Jalankan 5 kali</b> untuk GA.</li>
+          <li>Coba prediksi 2 atau 3 nilai x baru.</li>
+          <li>Isi nomor kelompok dan satu kalimat kesimpulan di <b>Kartu Hasil</b>.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>Tantangan tambahan</h3>
+        <ul>
+          <li>Tambah satu titik pencilan yang jauh dari pola. Bagaimana GD dan GA bereaksi?</li>
+          <li>Coba populasi 6 dan generasi 5. Seberapa jauh dari jawaban terbaik?</li>
+          <li>Cari learning rate terkecil yang masih mencapai selisih di bawah 10% dalam 50 langkah.</li>
+        </ul>
+        <p class="muted small">Data harus fiktif dan netral. Jangan memakai data pribadi atau nilai siapa pun.</p>
+      </div>
+    </div>
+    <div class="row misi-actions">
+      <button type="button" id="btnMisi1">Siapkan Misi 1</button>
+      <button type="button" id="btnPakaiPreset" title="Mengisi pengaturan yang disarankan, dan contoh data jika data belum cukup">Pakai preset</button>
+      <button type="button" id="btnReset">Reset</button>
+      <span class="muted small" id="draftNote"></span>
+    </div>
+  </details>
+
+  <div class="praktik-grid">
+    <!-- Data dan Model -->
+    <section class="card" id="card-data" aria-labelledby="h-data">
+      <h2 id="h-data">Data dan Model</h2>
+      <div class="row">
+        <label for="scenarioSelect">Skenario</label>
+        <select id="scenarioSelect"></select>
+      </div>
+      <div class="fields" id="customFields" hidden>
+        <div class="field"><label for="cName">Nama skenario</label><input type="text" id="cName" maxlength="60"></div>
+        <div class="field"><label for="cXLabel">Label x</label><input type="text" id="cXLabel" maxlength="30"></div>
+        <div class="field"><label for="cXUnit">Satuan x</label><input type="text" id="cXUnit" maxlength="15"></div>
+        <div class="field"><label for="cYLabel">Label y</label><input type="text" id="cYLabel" maxlength="30"></div>
+        <div class="field"><label for="cYUnit">Satuan y</label><input type="text" id="cYUnit" maxlength="15"></div>
+      </div>
+      <div class="canvas-wrap" style="margin-top:8px">
+        <canvas id="plot" aria-label="Grafik data dan garis model. Klik untuk menambah titik."></canvas>
+      </div>
+      <div class="legend">
+        <span><i class="sw sw-data"></i>data</span>
+        <span><i class="sw sw-gd"></i>garis GD</span>
+        <span><i class="sw sw-ga"></i>garis GA</span>
+        <span><i class="sw sw-best"></i>jawaban terbaik</span>
+        <span><i class="sw sw-try"></i>garis coba-coba</span>
+      </div>
+      <p class="muted small">Klik grafik untuk menambah titik data. Model: y = w·x + b.</p>
+    </section>
+
+    <!-- Lanskap Error -->
+    <div id="land-wrap">
+    <section class="card" id="card-land" aria-labelledby="h-land">
+      <h2 id="h-land">Lanskap Error</h2>
+      <div class="canvas-wrap">
+        <canvas id="heat" aria-label="Peta error untuk setiap pasangan w dan b"></canvas>
+      </div>
+      <div class="legend">
+        <span>error kecil</span><i class="colorbar"></i><span>error besar</span>
+      </div>
+      <div class="legend">
+        <span><i class="sw sw-start"></i>titik awal GD</span>
+        <span><i class="sw sw-gd"></i>bola GD</span>
+        <span><i class="sw sw-ga"></i>populasi GA</span>
+        <span><i class="sw sw-best"></i>jawaban terbaik</span>
+      </div>
+      <p class="muted small" id="heatReadout">Arahkan atau klik peta untuk mencoba satu pasangan (w, b).</p>
+      <canvas id="lossChart" aria-label="Grafik error terhadap iterasi"></canvas>
+      <p class="muted small" id="optInfo"></p>
+    </section>
+    </div>
+
+    <!-- Latih Model -->
+    <section class="card" id="card-train" aria-labelledby="h-train">
+      <h2 id="h-train">Latih Model</h2>
+      <div class="method" id="gdBox">
+        <h3><span class="dot" style="background:var(--gd)"></span>Cara 1: Gradient Descent (GD)</h3>
+        <div class="row" role="group" aria-label="Preset learning rate">
+          <button type="button" class="chip" data-lr="kecil">Terlalu kecil</button>
+          <button type="button" class="chip" data-lr="pas">Pas</button>
+          <button type="button" class="chip" data-lr="besar">Terlalu besar</button>
+        </div>
+        <div class="ctrl"><label for="lrSlider">Learning rate</label><input type="range" id="lrSlider" min="-3" max="0.5" step="0.01"><output id="lrOut"></output></div>
+        <div class="ctrl"><label for="stepsSlider">Jumlah langkah</label><input type="range" id="stepsSlider" min="10" max="300" step="10"><output id="stepsOut"></output></div>
+        <div class="ctrl"><label for="speedSlider">Kecepatan animasi</label><input type="range" id="speedSlider" min="1" max="5" step="1"><output id="speedOut"></output></div>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btnGD">Latih GD</button>
+          <button type="button" id="btnGDFinish">Langsung selesai</button>
+        </div>
+        <div class="msg-warn" id="gdWarn" role="status"></div>
+        <div class="result" id="gdResult" aria-live="polite"></div>
+      </div>
+      <div class="method" id="gaBox">
+        <h3><span class="dot" style="background:var(--ga)"></span>Cara 2: Algoritma Genetika (GA)</h3>
+        <div class="ctrl"><label for="popSlider">Ukuran populasi</label><input type="range" id="popSlider" min="6" max="60" step="1"><output id="popOut"></output></div>
+        <div class="ctrl"><label for="genSlider">Jumlah generasi</label><input type="range" id="genSlider" min="5" max="80" step="1"><output id="genOut"></output></div>
+        <div class="ctrl"><label for="mutSlider">Laju mutasi</label><input type="range" id="mutSlider" min="0" max="1" step="0.01"><output id="mutOut"></output></div>
+        <div class="row" role="group" aria-label="Preset laju mutasi">
+          <button type="button" class="chip" data-mut="0.05">Rendah</button>
+          <button type="button" class="chip" data-mut="0.3">Sedang</button>
+          <button type="button" class="chip" data-mut="0.8">Tinggi</button>
+          <label for="seedInput" style="margin-left:auto">Seed</label>
+          <input type="number" id="seedInput" min="0" max="999999" step="1" style="width:6.5em">
+        </div>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btnGA">Jalankan GA</button>
+          <button type="button" id="btnGAFinish">Langsung selesai</button>
+          <button type="button" class="btn-gold" id="btnGA5">Jalankan 5 kali</button>
+        </div>
+        <div class="result" id="gaResult" aria-live="polite"></div>
+        <div id="gaManyBox"></div>
+      </div>
+      <p class="compare" id="evalCompare"></p>
+    </section>
+
+    <!-- Tabel data -->
+    <section class="card" id="card-table" aria-labelledby="h-table">
+      <h2 id="h-table">Tabel Data</h2>
+      <div class="table-scroll">
+        <table id="dataTable">
+          <thead><tr><th>No</th><th id="thX">x</th><th id="thY">y</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button type="button" id="btnAddRow">Tambah baris</button>
+        <span class="muted small" id="dataCount"></span>
+      </div>
+      <div class="msg-warn" id="dataWarn"></div>
+    </section>
+
+    <!-- Prediksi -->
+    <section class="card" id="card-pred" aria-labelledby="h-pred">
+      <h2 id="h-pred">Prediksi</h2>
+      <form id="predForm" class="row" autocomplete="off">
+        <label for="predInput" id="predLabel">Nilai x baru</label>
+        <input type="text" id="predInput" inputmode="decimal" style="width:8em" placeholder="contoh: 7">
+        <label for="predModel">Model</label>
+        <select id="predModel">
+          <option value="both">Keduanya</option>
+          <option value="gd">GD</option>
+          <option value="ga">GA terbaik</option>
+        </select>
+        <button type="submit" class="btn-primary" id="btnPredict">Prediksi</button>
+      </form>
+      <div class="pred-out" id="predOut" aria-live="polite"></div>
+      <p class="muted small">Tiga prediksi terakhir otomatis masuk ke Kartu Hasil.</p>
+    </section>
+
+    <!-- Kartu Hasil -->
+    <section class="card" id="card-kartu" aria-labelledby="h-kartu">
+      <h2 id="h-kartu">Kartu Hasil</h2>
+      <div class="kartu-layout">
+        <div>
+          <div class="field">
+            <label for="groupInput">Nomor kelompok (tanpa nama)</label>
+            <input type="text" id="groupInput" maxlength="4" inputmode="numeric" style="width:6em">
+          </div>
+          <div class="field" style="margin-top:8px">
+            <label for="conclusionInput">Satu kalimat kesimpulan kelompok</label>
+            <textarea id="conclusionInput" rows="3" maxlength="240" placeholder="contoh: GD dengan learning rate pas paling cepat, GA tetap dekat walau tanpa kemiringan."></textarea>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button type="button" class="btn-primary" id="btnCopy">Salin ringkasan</button>
+            <button type="button" id="btnPresent2" aria-pressed="false">Mode Presentasi</button>
+          </div>
+          <textarea id="copyFallback" rows="6" readonly hidden aria-label="Ringkasan untuk disalin manual"></textarea>
+        </div>
+        <div class="hasil" id="hasilCard"></div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- ===================== PANDUAN ===================== -->
+<section class="tabpanel doc" id="panel-panduan" role="tabpanel" aria-labelledby="tab-panduan" hidden>
+  <div class="card">
+    <h2>Panduan Peserta: Prediktor, Dua Cara Belajar</h2>
+    <p><b>Apa yang kita lakukan hari ini?</b> Kita membuat alat prediksi sederhana. Modelnya garis lurus <b>y = w·x + b</b>. Mesin dikatakan "belajar" ketika ia mencari pasangan <b>w</b> (kemiringan) dan <b>b</b> (titik potong) yang membuat <b>error</b> paling kecil. Kita melatihnya dengan dua cara, lalu membandingkan hasilnya.</p>
+    <ul>
+      <li><b>Cara 1, Gradient Descent (GD):</b> mengikuti kemiringan error menuju lembah. Cepat, tapi sensitif terhadap learning rate.</li>
+      <li><b>Cara 2, Algoritma Genetika (GA):</b> sekumpulan tebakan diseleksi, dicampur, dan dimutasi dari generasi ke generasi. Tidak butuh kemiringan. Hasilnya bisa sedikit berbeda setiap kali dijalankan.</li>
+    </ul>
+    <p>Tidak perlu menulis kode. Semua berjalan di browser, juga tanpa internet setelah halaman pernah dibuka.</p>
+  </div>
+  <div class="card">
+    <h3>Misi 1 (8 menit): kenali dua cara</h3>
+    <ol>
+      <li>Di tab <b>Praktik</b>, pakai skenario <b>Jarak dan waktu tempuh</b> (atau klik <b>Siapkan Misi 1</b>).</li>
+      <li>Klik <b>Terlalu kecil</b>, lalu <b>Latih GD</b>. Bola merah merayap pelan.</li>
+      <li>Klik <b>Pas</b>, lalu <b>Latih GD</b>. Bola turun ke lembah dan mendekati bintang.</li>
+      <li>Klik <b>Terlalu besar</b>, lalu <b>Latih GD</b>. Bola melompat makin jauh dan error membesar.</li>
+      <li>Klik <b>Jalankan GA</b>. Titik hijau tosca berkumpul menuju bintang. Bandingkan jumlah evaluasinya dengan GD.</li>
+    </ol>
+    <h3>Misi 2 (13 menit): Prediktor kelompok kalian</h3>
+    <ol>
+      <li>Pilih skenario lain atau <b>Skenario sendiri</b>. Isi nama skenario, label, dan satuan x serta y.</li>
+      <li>Isi 6 sampai 10 titik data fiktif di tabel, atau klik grafik untuk menambah titik.</li>
+      <li>Latih GD dengan <b>Pas</b>.</li>
+      <li>Klik <b>Jalankan 5 kali</b> untuk GA. Lihat terbaik, terburuk, dan rata-ratanya.</li>
+      <li>Di kotak <b>Prediksi</b>, coba 2 atau 3 nilai x baru.</li>
+      <li>Isi nomor kelompok dan satu kalimat kesimpulan di <b>Kartu Hasil</b>, lalu nyalakan <b>Mode Presentasi</b> jika akan tampil.</li>
+    </ol>
+    <p class="muted">Macet? Klik <b>Pakai preset</b>. Ingin mengulang dari awal? Klik <b>Reset</b>.</p>
+  </div>
+  <div class="card">
+    <h3>Arti setiap kontrol</h3>
+    <dl>
+      <dt>Error (MSE)</dt><dd>Rata-rata kuadrat selisih antara tebakan garis dan data asli. Makin kecil makin pas. Satuannya satuan y dikuadratkan.</dd>
+      <dt>Lanskap Error</dt><dd>Peta semua pasangan (w, b). Warna terang berarti error kecil, gelap berarti error besar. Bintang emas adalah jawaban terbaik, yang bisa dihitung langsung karena modelnya kecil.</dd>
+      <dt>Learning rate</dt><dd>Ukuran langkah GD. Terlalu kecil membuat lambat, terlalu besar membuat bola melompat dan error membesar.</dd>
+      <dt>Jumlah langkah</dt><dd>Berapa kali GD melangkah.</dd>
+      <dt>Ukuran populasi</dt><dd>Banyaknya tebakan (w, b) dalam satu generasi GA.</dd>
+      <dt>Jumlah generasi</dt><dd>Berapa kali populasi diperbarui.</dd>
+      <dt>Laju mutasi</dt><dd>Peluang setiap anak digeser sedikit secara acak. Rendah membuat populasi cepat seragam, tinggi membuat pencarian lebih menyebar.</dd>
+      <dt>Seed</dt><dd>Angka awal pengacak. Seed yang sama selalu memberi hasil yang sama, sehingga hasil bisa diulang.</dd>
+      <dt>Evaluasi</dt><dd>Berapa kali error dihitung. GD: satu kali per langkah. GA: ukuran populasi dikali jumlah generasi. Dipakai untuk membandingkan secara adil.</dd>
+    </dl>
+  </div>
+  <div class="card">
+    <h3>Cara membaca Kartu Hasil</h3>
+    <ul>
+      <li><b>GD:</b> pengaturan learning rate dan langkah, error akhir, serta selisihnya dengan jawaban terbaik.</li>
+      <li><b>GA 5 kali:</b> error terbaik, terburuk, dan rata-rata dari lima seed berbeda. Selisih dalam persen menunjukkan seberapa jauh dari jawaban terbaik.</li>
+      <li><b>Jawaban terbaik:</b> error dari rumus pasti, sebagai kunci jawaban.</li>
+      <li><b>Prediksi:</b> contoh pemakaian model untuk nilai x baru.</li>
+      <li><b>Kesimpulan:</b> satu kalimat dari kelompok kalian.</li>
+    </ul>
+  </div>
+  <div class="card honesty">
+    <h3>Catatan kejujuran tentang metaheuristik</h3>
+    <p>Algoritma genetika dan metaheuristik lain tidak menjamin jawaban terbaik. Mereka memberi jawaban yang cukup baik dalam waktu yang wajar. Karena itu kita menjalankannya beberapa kali dan melaporkan hasil terbaik, terburuk, dan rata-ratanya apa adanya. Untuk garis lurus, jawaban terbaik bisa dihitung dengan rumus. Metaheuristik berguna untuk masalah yang tidak punya kemiringan, misalnya menyusun urutan rute perjalanan.</p>
+  </div>
+  <div class="card">
+    <h3>Pertanyaan lanjutan dan kanal resmi</h3>
+    <p>Pertanyaan yang belum terjawab bisa disampaikan ke presenter setelah sesi atau lewat kanal resmi Computing Laboratory:</p>
+    <ul>
+      <li>Instagram: <a href="https://www.instagram.com/computing.lab/" target="_blank" rel="noopener">@computing.lab</a></li>
+      <li>Situs: <a href="https://computinglab.tech" target="_blank" rel="noopener">computinglab.tech</a></li>
+    </ul>
+    <div class="qr-box">
+      <img src="qr.svg" alt="Kode QR menuju alat ini" width="150" height="150">
+      <p class="muted">Pindai untuk membuka alat ini di perangkat lain.<br>Alat ini tidak mengumpulkan data apa pun. Isian hanya tersimpan di browser kalian sendiri.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PSEUDOCODE ===================== -->
+<section class="tabpanel doc" id="panel-pseudocode" role="tabpanel" aria-labelledby="tab-pseudocode" hidden>
+  <div class="card">
+    <h2>Pseudocode</h2>
+    <p class="muted">Ditulis dengan gaya umum supaya mudah dibaca. Notasinya tidak mengikuti notasi resmi mata kuliah tertentu.</p>
+    <h3>Menghitung error</h3>
+<pre>fungsi error(w, b)
+    total ← 0
+    untuk setiap titik (x, y) dalam data
+        tebakan ← w * x + b
+        total ← total + (tebakan - y)²
+    kembalikan total / banyak_data</pre>
+  </div>
+  <div class="card">
+    <h3>1. Brute force di atas grid (w, b)</h3>
+<pre>terbaik ← tak hingga
+untuk w dari -2 sampai 4, naik 0,1
+    untuk b dari -2 sampai 4, naik 0,1
+        e ← error(w, b)
+        jika e &lt; terbaik maka
+            terbaik ← e
+            simpan (w, b)
+kembalikan (w, b) yang tersimpan</pre>
+    <p><b>Kapan dipakai:</b> saat kemungkinan jawabannya sedikit dan kita ingin memeriksa semuanya.</p>
+  </div>
+  <div class="card">
+    <h3>2. Gradient Descent</h3>
+<pre>w ← w_awal
+b ← b_awal
+ulangi sebanyak jumlah_langkah kali
+    gw ← kemiringan error terhadap w     // 2 × rata-rata((w*x + b - y) * x)
+    gb ← kemiringan error terhadap b     // 2 × rata-rata(w*x + b - y)
+    w ← w - learning_rate * gw
+    b ← b - learning_rate * gb
+    jika error(w, b) membesar tak terkendali maka berhenti
+kembalikan (w, b)</pre>
+    <p><b>Kapan dipakai:</b> saat error punya kemiringan yang bisa dihitung, seperti saat melatih model machine learning.</p>
+  </div>
+  <div class="card">
+    <h3>3. Algoritma Genetika</h3>
+<pre>populasi ← N pasangan (w, b) acak
+ulangi sebanyak jumlah_generasi kali
+    hitung error setiap individu
+    baru ← [individu dengan error terkecil]     // elitisme
+    selama ukuran(baru) &lt; N
+        induk_1 ← turnamen(populasi)            // ambil 3 acak, pilih yang error-nya terkecil
+        induk_2 ← turnamen(populasi)
+        anak ← campuran(induk_1, induk_2)       // crossover: nilai acak di sekitar kedua induk
+        dengan peluang laju_mutasi:
+            geser anak sedikit secara acak       // mutasi
+        tambahkan anak ke baru
+    populasi ← baru
+kembalikan individu dengan error terkecil</pre>
+    <p><b>Kapan dipakai:</b> saat kemiringan tidak ada atau sulit dihitung, misalnya menyusun urutan rute atau jadwal.</p>
+  </div>
+</section>
+
+<!-- ===================== TENTANG LAB ===================== -->
+<section class="tabpanel doc" id="panel-tentang" role="tabpanel" aria-labelledby="tab-tentang" hidden>
+  <div class="card">
+    <h2>Computing Laboratory</h2>
+    <p>Laboratorium di Fakultas Informatika, Telkom University.</p>
+    <p><b>Fokus:</b> Computational Intelligence dan optimasi, dengan competitive programming sebagai pondasi cara berpikir algoritmik.</p>
+    <p>Di Computing Laboratory, belajar dipandang sebagai optimasi, seperti gradient descent yang kalian coba hari ini. Lab mendalami metaheuristik, yaitu algoritma genetika, particle swarm optimization, ant colony optimization, simulated annealing, dan Komodo Mlipir Algorithm yang dikembangkan di Telkom University. Lab juga mendalami machine learning yang berpijak pada optimasi, sehingga tidak berhenti pada memanggil library.</p>
+  </div>
+  <div class="card">
+    <h3>Kaitan dengan Kelompok Keahlian DSIS</h3>
+    <p>DSIS (Data Science and AI) membahas cara mengolah data dan membangun sistem yang bisa memprediksi atau mengambil keputusan. Hampir setiap model dilatih dengan mencari pengaturan terbaik, dan itu adalah masalah optimasi. Prospek karier yang terkait: Data Scientist, Machine Learning Engineer, dan AI Engineer.</p>
+  </div>
+  <div class="card">
+    <h3>Topik publikasi lab tahun 2026</h3>
+    <ul>
+      <li>Bias warna kulit pada AI dermatologi.</li>
+      <li>Small language model terkuantisasi 4-bit dengan prompting CoT dan PoT.</li>
+      <li>Video-LLM yang dapat dijalankan di perangkat edge.</li>
+      <li>Algoritma hybrid bee colony untuk rekomendasi rencana perjalanan.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Kanal resmi</h3>
+    <ul>
+      <li>Instagram: <a href="https://www.instagram.com/computing.lab/" target="_blank" rel="noopener">@computing.lab</a></li>
+      <li>Situs: <a href="https://computinglab.tech" target="_blank" rel="noopener">computinglab.tech</a></li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>Prediktor oleh Computing Laboratory untuk FORTRAN 2026. Tidak ada data yang dikumpulkan; semua perhitungan terjadi di browser kalian.</footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
