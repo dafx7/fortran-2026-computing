@@ -376,8 +376,19 @@
       ctx.stroke();
       ctx.strokeStyle = COLORS.gd; ctx.lineWidth = 2.5; ctx.stroke();
       var cur = path[n];
+      // Jika bola keluar peta, tampilkan di tepi peta dengan keterangan.
+      var bx = X(cur.w), by = Y(cur.b), m = 10;
+      var outside = bx < pad.l || bx > pad.l + iw || by < pad.t || by > pad.t + ih;
+      bx = Math.min(Math.max(bx, pad.l + m), pad.l + iw - m); by = Math.min(Math.max(by, pad.t + m), pad.t + ih - m);
       ctx.fillStyle = COLORS.gd; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5;
-      ctx.beginPath(); ctx.arc(X(cur.w), Y(cur.b), 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(bx, by, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      if (outside) {
+        ctx.font = '700 11px system-ui, sans-serif';
+        var ot = 'bola keluar peta', ow = ctx.measureText(ot).width;
+        var ox = Math.min(Math.max(bx - ow / 2, pad.l + 4), pad.l + iw - ow - 4), oy = by > pad.t + ih / 2 ? by - 16 : by + 24;
+        ctx.fillStyle = COLORS.gd; roundRect(ctx, ox - 4, oy - 12, ow + 8, 16, 4); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.fillText(ot, ox, oy);
+      }
     }
     // Bintang jawaban terbaik, setelah ada latihan.
     if (anyRun()) {
@@ -1031,7 +1042,7 @@
         navigator.serviceWorker.register('sw.js').catch(function () { /* mode luring tidak tersedia, alat tetap jalan */ });
       }
     }
-    window.__prediktor = { state: function () { return state; }, run: run };
+    window.__prediktor = { state: function () { return state; }, run: run, redraw: drawAll };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
